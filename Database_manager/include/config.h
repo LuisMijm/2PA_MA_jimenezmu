@@ -27,4 +27,6 @@ struct Settings{
 
 extern Settings settings;
 
+void InitSettings();
+
 #endif
