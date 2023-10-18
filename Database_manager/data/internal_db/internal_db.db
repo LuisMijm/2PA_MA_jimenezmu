@@ -1,13 +1,16 @@
 --
--- Archivo generado con SQLiteStudio v3.4.4 el mi. oct. 18 19:15:16 2023
+-- Archivo generado con SQLiteStudio v3.4.4 el mi. oct. 18 19:25:34 2023
 --
 -- Codificación de texto usada: System
 --
 PRAGMA foreign_keys = off;
 BEGIN TRANSACTION;
 
--- Tabla: Settings
-CREATE TABLE IF NOT EXISTS Settings (screen_window_width INTEGER DEFAULT (900), screen_window_height INTEGER DEFAULT (900), fps_fps TEXT DEFAULT (60));
+-- Tabla: settings
+CREATE TABLE IF NOT EXISTS settings (config_id INTEGER PRIMARY KEY, setting_name TEXT NOT NULL UNIQUE, setting_value REAL NOT NULL);
+INSERT INTO settings (config_id, setting_name, setting_value) VALUES (1, 'screen_window_width', 900.0);
+INSERT INTO settings (config_id, setting_name, setting_value) VALUES (2, 'screen_window_height', 900.0);
+INSERT INTO settings (config_id, setting_name, setting_value) VALUES (3, 'fps_fps', 60.0);
 
 COMMIT TRANSACTION;
 PRAGMA foreign_keys = on;
