@@ -1,4 +1,15 @@
 
+/**
+ * @file config.cc
+ * @author Luis Miguel Jiménez
+ * @brief File for configuration procedures
+ * @version 0.1
+ * @date 2023-10-19
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
+
 #include "config.h"
 
 #include <stdio.h>

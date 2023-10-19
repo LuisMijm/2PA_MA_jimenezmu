@@ -1,4 +1,15 @@
 
+/**
+ * @file config.h
+ * @author Luis Miguel Jiménez
+ * @brief Header file for the configuration procedures
+ * @version 0.1
+ * @date 2023-10-19
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
+
 #ifndef _CONFIG_H__
 #define _CONFIG_H__ 1
 

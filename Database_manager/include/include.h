@@ -1,4 +1,15 @@
 
+/**
+ * @file include.h
+ * @author Luis Miguel Jiménez
+ * @brief Header file for all the include files used in the program
+ * @version 0.1
+ * @date 2023-10-19
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
+
 #ifndef _INCLUDE_H_
 #define _INCLUDE_H_ 1
 
