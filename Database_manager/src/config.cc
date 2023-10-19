@@ -16,4 +16,8 @@ void InitSettings()
     settings.exit_program = false;
     settings.freeze_update = false;
 
+    settings.current_database = 0;
+    settings.current_table = 0;
+
+    settings.querie_text[0] = '\0';
 }

@@ -19,6 +19,8 @@
 #include "esat\time.h"
 #include "esat_extra\imgui.h"
 
+#include "config.h"
+
 /**
  * @brief Window to select data base
  * 

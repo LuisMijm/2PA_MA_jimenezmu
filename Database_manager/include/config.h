@@ -23,6 +23,13 @@ struct Settings{
     // internal database
     int db_result_code;
     sqlite3 *db;
+
+    // selected database & table
+    int current_database;
+    int current_table;
+
+    //Input text Window Querie
+    char querie_text[512];
 };
 
 extern Settings settings;

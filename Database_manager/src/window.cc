@@ -10,10 +10,7 @@
  */
 
 #include "../include/window.h"    
-    
-int current_database = 0;
-int current_table = 0;
-char text[512];
+
 
 void DataBaseSelectedWindow()
 {
@@ -22,7 +19,7 @@ void DataBaseSelectedWindow()
     ImGui::Begin("Select DataBase:", nullptr ,
                     ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
                     | ImGuiWindowFlags_NoCollapse);
-    ImGui::Combo("", &current_database, 
+    ImGui::Combo("", &settings.current_database, 
                 "DataBaseA\0DataBaseB\0DataBaseC\0DataBaeD\0DataBaseE\0\0");
     ImGui::End();
 }
@@ -34,9 +31,8 @@ void TableSelectedWindow(int selected_database, char current_database_name[])
     ImGui::Begin("Select Table:", nullptr ,
                     ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
                     | ImGuiWindowFlags_NoCollapse);
-    ImGui::Combo("", &current_table, 
-                "TableA\0TableB\0TableC\0TableD\0TableE\0\0");
-
+    ImGui::Combo("", &settings.current_table,
+                 "TableA\0TableB\0TableC\0TableD\0TableE\0\0");
 
     ImGui::End();
 }
@@ -80,15 +76,18 @@ void QuerieWindow()
     ImGui::Begin("Queries:", nullptr , 
                     ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
                     | ImGuiWindowFlags_NoCollapse);
-    ImGui::InputTextMultiline("##source", text, IM_ARRAYSIZE(text), 
-                                ImVec2(-1.0f, ImGui::GetTextLineHeight() * 7), 
-                                ImGuiInputTextFlags_AllowTabInput );
+    ImGui::InputTextMultiline("##source", settings.querie_text, IM_ARRAYSIZE(settings.querie_text),
+                              ImVec2(-1.0f, ImGui::GetTextLineHeight() * 7),
+                              ImGuiInputTextFlags_AllowTabInput);
     if(ImGui::Button("Submit"))
     {
 
     }
     ImGui::SameLine();
-    if(ImGui::Button("Clear")){text[0]= '\0';}
+    if(ImGui::Button("Clear"))
+    {
+        settings.querie_text[0] = '\0';
+    }
     ImGui::End();
 }
 
