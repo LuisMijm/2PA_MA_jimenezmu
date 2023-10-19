@@ -13,4 +13,6 @@
 #include <esat/helpers.h>
 #include <esat_extra/imgui.h>
 
+#include "config.h"
+#include "window.h"
 #endif

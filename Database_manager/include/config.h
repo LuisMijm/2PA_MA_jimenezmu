@@ -36,4 +36,8 @@ extern Settings settings;
 
 void InitSettings();
 
+int ConnectToDB(char *db_path, sqlite3 **db, int *result_code);
+int RunQuery(char* query, sqlite3* db);
+int SetSettings(void *not_used, int argc, char **argv, char **azcolname);
+
 #endif

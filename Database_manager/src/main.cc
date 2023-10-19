@@ -6,20 +6,24 @@ int esat::main(int argc, char **argv)
 {
     srand((unsigned int)time(NULL));
 
+    InitSettings();
 
-    esat::WindowInit(g_settings.screen_window_width, g_settings.screen_window_height);
+    ConnectToDB("./data/internal_db/internaldb.db", &settings.db, &settings.db_result_code);
+    settings.db_result_code = RunQuery("SELECT * FROM settings", settings.db);
 
-    while (esat::WindowIsOpened() && !esat::IsSpecialKeyDown(esat::kSpecialKey_Escape) && !g_settings.exit_game)
+    esat::WindowInit(settings.screen_window_width, settings.screen_window_height);
+
+    while (esat::WindowIsOpened() && !esat::IsSpecialKeyDown(esat::kSpecialKey_Escape) && !settings.exit_program)
     {
-        g_settings.fps_last_time = esat::Time();
+        settings.fps_last_time = esat::Time();
         esat::DrawBegin();
         esat::DrawClear(0, 0, 0);
 
 
         do
         {
-            g_settings.fps_current_time = esat::Time();
-        } while ((g_settings.fps_current_time - g_settings.fps_last_time) <= 1000.0 / g_settings.fps_fps);
+            settings.fps_current_time = esat::Time();
+        } while ((settings.fps_current_time - settings.fps_last_time) <= 1000.0 / settings.fps_fps);
         esat::WindowFrame();
     }
 
