@@ -72,10 +72,10 @@ void FreeTable(int cols, int rows) {
     settings.db_table_info = nullptr;
 }
 
-void LoadTable(char* table_name)
+/* void LoadTable(char* table_name)
 {
     "Select * from ";
 
     RunQuery();
 
-}
+} */

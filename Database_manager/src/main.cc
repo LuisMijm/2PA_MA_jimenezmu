@@ -1,6 +1,6 @@
 
 
-#include "include.h"
+#include "../include/include.h"
 
 int esat::main(int argc, char **argv)
 {
@@ -19,7 +19,8 @@ int esat::main(int argc, char **argv)
         esat::DrawBegin();
         esat::DrawClear(0, 0, 0);
 
-        
+        AllWindow();
+        ImGui::ShowDemoWindow();   
 
         do
         {

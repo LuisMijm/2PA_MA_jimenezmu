@@ -21,8 +21,8 @@ Settings settings;
 void InitSettings()
 {
     
-    settings.screen_window_height = 100;
-    settings.screen_window_width = 100;
+    settings.screen_window_width = 800;
+    settings.screen_window_height = 800;
 
     settings.fps_current_time = 0.0f;
     settings.fps_last_time = 0.0f;
