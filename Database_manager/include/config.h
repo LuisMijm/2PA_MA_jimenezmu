@@ -2,7 +2,7 @@
 /**
  * @file config.h
  * @author Luis Miguel Jiménez
- * @brief Header file for the configuration procedures
+ * @brief Header file for the program configuration procedures and data
  * @version 0.1
  * @date 2023-10-19
  *
@@ -15,6 +15,7 @@
 
 #include <esat_extra/sqlite3.h>
 
+int const kStringSize = 16;
 
 struct Settings{
 
@@ -33,7 +34,7 @@ struct Settings{
 
     // internal database
     int db_result_code;
-    sqlite3 *db;
+    sqlite3 *db_internal;
 
     // selected database & table
     int current_database;
@@ -41,6 +42,14 @@ struct Settings{
 
     //Input text Window Querie
     char querie_text[512];
+
+
+    // Data base info
+    int db_Rows;
+    // int db_Current_Col_Rows[2];
+    sqlite3 *db_current;
+    char** db_ColNames;
+    char*** db_table_info;
 };
 
 extern Settings settings;
@@ -48,7 +57,7 @@ extern Settings settings;
 void InitSettings();
 
 int ConnectToDB(char *db_path, sqlite3 **db, int *result_code);
-int RunQuery(char* query, sqlite3* db);
+int RunQuery(char *query, sqlite3 *db, int callback(void *, int, char **, char **));
 int SetSettings(void *not_used, int argc, char **argv, char **azcolname);
 
 #endif

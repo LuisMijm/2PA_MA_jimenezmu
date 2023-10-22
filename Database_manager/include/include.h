@@ -23,6 +23,7 @@
 #include <esat/time.h>
 #include <esat/helpers.h>
 #include <esat_extra/imgui.h>
+#include <esat_extra/sqlite3.h>
 
 #include "config.h"
 #include "window.h"

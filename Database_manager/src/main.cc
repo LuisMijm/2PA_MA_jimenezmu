@@ -8,8 +8,8 @@ int esat::main(int argc, char **argv)
 
     InitSettings();
 
-    ConnectToDB("./data/internal_db/internaldb.db", &settings.db, &settings.db_result_code);
-    settings.db_result_code = RunQuery("SELECT * FROM settings", settings.db);
+    ConnectToDB("./data/internal_db/internaldb.db", &settings.db_internal, &settings.db_result_code);
+    settings.db_result_code = RunQuery("SELECT * FROM settings", settings.db_internal, SetSettings);
 
     esat::WindowInit(settings.screen_window_width, settings.screen_window_height);
 
@@ -19,6 +19,7 @@ int esat::main(int argc, char **argv)
         esat::DrawBegin();
         esat::DrawClear(0, 0, 0);
 
+        
 
         do
         {
@@ -27,6 +28,7 @@ int esat::main(int argc, char **argv)
         esat::WindowFrame();
     }
 
+    sqlite3_close(settings.db_internal);
 
     esat::WindowDestroy();
     return 0;

@@ -2,7 +2,7 @@
 /**
  * @file config.cc
  * @author Luis Miguel Jiménez
- * @brief File for configuration procedures
+ * @brief File for program configuration procedures and data
  * @version 0.1
  * @date 2023-10-19
  *
@@ -35,6 +35,7 @@ void InitSettings()
     settings.current_table = 0;
 
     settings.querie_text[0] = '\0';
+
 }
 
 
@@ -53,12 +54,24 @@ int ConnectToDB(char* db_path, sqlite3** db, int* result_code)
     }
 }
 
-int RunQuery(char *query, sqlite3 *db)
+// int RunSettingsQuery(char *query, sqlite3 *db)
+// {
+//     int result_code;
+//     char* err_msg = 0;
+
+//     result_code = sqlite3_exec(db, query, SetSettings, 0, &err_msg);
+
+//     return result_code;
+// }
+
+int RunQuery(char *query, sqlite3 *db, int callback(void *, int, char **, char **))
 {
     int result_code;
     char* err_msg = 0;
 
-    result_code = sqlite3_exec(db, query, SetSettings, 0, &err_msg);
+    // settings.db_Rows[0] = sqlite3_column_count();
+
+    result_code = sqlite3_exec(db, query,  callback, 0, &err_msg);
 
     return result_code;
 }
@@ -70,12 +83,12 @@ int SetSettings(void* not_used, int argc, char** argv, char** azcolname)
     if (!strcmp(argv[1], "screen_window_height"))
     {
         sscanf(argv[2], "%d", &settings.screen_window_height);
-        printf("%d\n", settings.screen_window_height);
+        // printf("%d\n", settings.screen_window_height);
     }
     else if (!strcmp(argv[1], "screen_window_width"))
     {
         sscanf(argv[2], "%d", &settings.screen_window_width);
-        printf("%d\n", settings.screen_window_width);
+        // printf("%d\n", settings.screen_window_width);
     }
 
     return 0;
