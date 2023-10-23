@@ -10,12 +10,14 @@
 // typedef char* String;
 
 
+// Siempre devuelve 1 . Corregir
 int GetDataFromDB(void *not_used, int argc, char **argv, char **azcolname)
 {
     not_used = 0;
 
     if (settings.db_Rows == 0)
     {
+        settings.db_Cols = argc;
         settings.db_ColNames = (char**)realloc(settings.db_ColNames, argc * sizeof(char*));
 
         for (int i = 0; i < argc; i++)
@@ -71,11 +73,3 @@ void FreeTable(int cols, int rows) {
     free(settings.db_table_info);
     settings.db_table_info = nullptr;
 }
-
-/* void LoadTable(char* table_name)
-{
-    "Select * from ";
-
-    RunQuery();
-
-} */

@@ -26,5 +26,6 @@
 #include <esat_extra/sqlite3.h>
 
 #include "config.h"
+#include "database.h"
 #include "ImGuiWindow.h"
 #endif

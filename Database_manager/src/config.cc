@@ -53,6 +53,7 @@ int ConnectToDB(char* db_path, sqlite3** db, int* result_code)
         return 1;
     }else{
         printf("Database open\n");
+        
         return 0;
     }
 }

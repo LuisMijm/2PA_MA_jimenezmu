@@ -8,9 +8,9 @@ int esat::main(int argc, char **argv)
 
     InitSettings();
 
-    DataBaseNames(".\\data\\internaldb\\");
+    DataBaseNames("../data/internaldb/");
 
-    ConnectToDB("./data/internal_db/internaldb.db", &settings.db_internal, &settings.db_result_code);
+    ConnectToDB("./data/internaldb/internaldb.db", &settings.db_internal, &settings.db_result_code);
     settings.db_result_code = RunQuery("SELECT * FROM settings", settings.db_internal, SetSettings);
 
     esat::WindowInit(settings.screen_window_width, settings.screen_window_height);

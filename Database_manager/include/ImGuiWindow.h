@@ -46,7 +46,8 @@ void TableSelectedWindow(int selected_database, char current_database_name[]);
  * @copyright Coyright (c) 2023
  * 
 */
-void CurrentTableWindow(int selected_table, char current_table_name[]);
+void CurrentTableWindow(int selected_table, int database_selected,
+                        char current_table_name[], int n_db_rows);
 
 /**
  * @brief Console Window
@@ -66,16 +67,7 @@ void ConsoleWindow();
  * @copyright Coyright (c) 2023
  * 
 */
-void TextWindow();
 
-/**
- * @brief Querie Window
- * 
- * Window to do querie to selected table
- * 
- * @copyright Coyright (c) 2023
- * 
-*/
 void QuerieWindow();
 
 /**
