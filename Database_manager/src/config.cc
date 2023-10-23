@@ -16,6 +16,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <dirent.h>
+
 Settings settings;
 
 void InitSettings()
@@ -35,6 +37,7 @@ void InitSettings()
     settings.current_table = 0;
 
     settings.querie_text[0] = '\0';
+
 
 }
 
@@ -92,4 +95,30 @@ int SetSettings(void* not_used, int argc, char** argv, char** azcolname)
     }
 
     return 0;
+}
+
+void DataBaseNames(char* db_path)
+{
+    // system("dir");
+    DIR *directory;
+    struct dirent *entry;
+    int count = 0; 
+    
+    if ((directory = opendir(db_path)) != NULL)
+    {
+        while ((entry = readdir(directory)) != NULL)
+        {
+            if (entry->d_type == DT_REG && strstr(entry->d_name, ".db") != NULL)
+            {
+                count++;
+                settings.db_names = (char **)realloc(settings.db_names, count * sizeof(char *));
+                settings.db_names[count - 1] = (char *)realloc(settings.db_names[count - 1], kStringSize * sizeof(char));
+
+                strcpy(settings.db_names[count - 1], entry->d_name);
+            }
+            // printf("name: %s", settings.db_names[count - 1]);
+        }
+
+        closedir(directory);
+    }
 }
