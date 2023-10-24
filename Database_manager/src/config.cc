@@ -20,6 +20,7 @@
 
 Settings settings;
 
+
 void InitSettings()
 {
     
@@ -100,13 +101,15 @@ int SetSettings(void* not_used, int argc, char** argv, char** azcolname)
 
 void DataBaseNames(char* db_path)
 {
-    // system("dir");
     DIR *directory;
     struct dirent *entry;
     int count = 0; 
-    
-    if ((directory = opendir(db_path)) != NULL)
+    directory = opendir("../../data/internaldb/");
+    //if ((directory = opendir(db_path)) != NULL)
+    if (directory != NULL)
     {
+        printf("collecting names");
+        // system("dir .\\data\\internaldb");
         while ((entry = readdir(directory)) != NULL)
         {
             if (entry->d_type == DT_REG && strstr(entry->d_name, ".db") != NULL)
@@ -117,9 +120,12 @@ void DataBaseNames(char* db_path)
 
                 strcpy(settings.db_names[count - 1], entry->d_name);
             }
-            // printf("name: %s", settings.db_names[count - 1]);
+            printf("name: %s", settings.db_names[count - 1]);
         }
 
         closedir(directory);
+    }else
+    {
+        printf("Can't open folder to collect db names\n");
     }
 }

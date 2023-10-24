@@ -9,8 +9,29 @@
 
 // typedef char* String;
 
+/**
+ * @brief 
+ * 
+ * @return int 
+ */
+int ResetData()
+{
+    FreeTable(settings.db_Cols, settings.db_Rows);
+    settings.db_Cols = 0;
+    settings.db_Rows = 0;
 
-// Siempre devuelve 1 . Corregir
+    return 0;
+}
+
+/**
+ * @brief Get the Data From Data Base object
+ * 
+ * @param not_used 
+ * @param argc 
+ * @param argv 
+ * @param azcolname 
+ * @return int 
+ */
 int GetDataFromDB(void *not_used, int argc, char **argv, char **azcolname)
 {
     not_used = 0;
@@ -47,6 +68,12 @@ int GetDataFromDB(void *not_used, int argc, char **argv, char **azcolname)
     return 0;
 }
 
+/**
+ * @brief 
+ * 
+ * @param cols 
+ * @param rows 
+ */
 void FreeTable(int cols, int rows) {
 
     for(int i = 0; i < cols; i++)
@@ -55,7 +82,6 @@ void FreeTable(int cols, int rows) {
             free(settings.db_table_info[j][i]);
             settings.db_table_info[j][i] = nullptr;
         }
-    
     }
     
     for (int i = 0; i < rows; i++)
@@ -68,6 +94,7 @@ void FreeTable(int cols, int rows) {
         free(settings.db_ColNames[i]);
         settings.db_ColNames[i] = nullptr;
     }
+
     free(settings.db_ColNames);
     settings.db_ColNames = nullptr;
     free(settings.db_table_info);

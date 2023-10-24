@@ -2,11 +2,7 @@
 /**
  * @file config.h
  * @author Luis Miguel Jiménez
-<<<<<<< Updated upstream
  * @brief Header file for the program configuration procedures and data
-=======
- * @brief Header file for the configuration procedures and data
->>>>>>> Stashed changes
  * @version 0.1
  * @date 2023-10-19
  *
@@ -21,6 +17,10 @@
 
 int const kStringSize = 16;
 
+/**
+ * @brief struct to save all the data that the program needs
+ * 
+ */
 struct Settings{
 
     // Window
@@ -62,11 +62,49 @@ struct Settings{
 
 extern Settings settings;
 
+
+/**
+ * @brief Procedure to initialize the global variables of the program 
+ * 
+ */
 void InitSettings();
 
+/**
+ * @brief function to connect to a database
+ * 
+ * @param db_path path of the file where the db is
+ * @param db variable sqlite that holds the db in the program   
+ * @param result_code error code resulting of making the query
+ * @return int 
+ */
 int ConnectToDB(char *db_path, sqlite3 **db, int *result_code);
+
+/**
+ * @brief function that makes a query in the db selected using the callback given
+ * 
+ * @param query string cotaining the query itself
+ * @param db database on wich we will make the query
+ * @param callback function to execute the query 
+ * @return int 
+ */
 int RunQuery(char *query, sqlite3 *db, int callback(void *, int, char **, char **));
+
+/**
+ * @brief Callback function to stablish the program settings from a database
+ * 
+ * @param not_used 
+ * @param argc 
+ * @param argv 
+ * @param azcolname 
+ * @return int 
+ */
 int SetSettings(void *not_used, int argc, char **argv, char **azcolname);
+
+/**
+ * @brief Procedure to get the names of the databases that we can select
+ * 
+ * @param db_path file path where the databases are
+ */
 void DataBaseNames(char *db_path);
 
 #endif
