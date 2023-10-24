@@ -13,6 +13,23 @@
 #define _DATABASE_H__ 1
 
 /**
+ * @brief 
+ * 
+ * @return int 
+ */
+int ResetTable();
+
+/**
+ * @brief Get the Tables From D B object
+ * 
+ * @param not_used 
+ * @param argc 
+ * @param argv 
+ * @param azcolname 
+ */
+int GetTablesFromDB(void *not_used, int argc, char **argv, char **azcolname);
+
+/**
  * @brief callback function to retrieve data from a database
  * 
  * @param not_used 

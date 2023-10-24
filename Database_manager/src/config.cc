@@ -37,9 +37,11 @@ void InitSettings()
     settings.current_database = 0;
     settings.current_table = 0;
 
+    
+
     settings.querie_text[0] = '\0';
-
-
+    settings.db_database_counter = 0;
+    settings.db_table_count = 0;
 }
 
 
@@ -81,6 +83,7 @@ int RunQuery(char *query, sqlite3 *db, int callback(void *, int, char **, char *
     return result_code;
 }
 
+
 int SetSettings(void* not_used, int argc, char** argv, char** azcolname)
 {
     not_used = 0;
@@ -103,29 +106,42 @@ void DataBaseNames(char* db_path)
 {
     DIR *directory;
     struct dirent *entry;
-    int count = 0; 
+    settings.db_database_counter = 0; 
     directory = opendir("../../data/internaldb/");
     //if ((directory = opendir(db_path)) != NULL)
     if (directory != NULL)
     {
-        printf("collecting names");
-        // system("dir .\\data\\internaldb");
+        // printf("collecting names\n");
+
         while ((entry = readdir(directory)) != NULL)
         {
             if (entry->d_type == DT_REG && strstr(entry->d_name, ".db") != NULL)
             {
-                count++;
-                settings.db_names = (char **)realloc(settings.db_names, count * sizeof(char *));
-                settings.db_names[count - 1] = (char *)realloc(settings.db_names[count - 1], kStringSize * sizeof(char));
-
-                strcpy(settings.db_names[count - 1], entry->d_name);
+                settings.db_database_counter++;
+                if ((settings.db_names = (char**)realloc(settings.db_names, settings.db_database_counter * sizeof(char*))) == nullptr)
+                {
+                    printf("Can't realocate memory\n");
+                }
+                settings.db_names[settings.db_database_counter - 1] = (char *)calloc(kStringSize, sizeof(char));
+                strcpy(settings.db_names[settings.db_database_counter - 1], entry->d_name);
             }
-            printf("name: %s", settings.db_names[count - 1]);
+            // printf("entry d_name: %s\n", entry->d_name);
+            // printf("name: %s\n", settings.db_names[settings.db_database_counter - 1]);
         }
-
         closedir(directory);
     }else
     {
         printf("Can't open folder to collect db names\n");
     }
+
+    for(int i = 0; i < 1; i++){
+        settings.all_db_names = (char*)realloc(settings.all_db_names, (kStringSize * (i + 1)) * sizeof(char));
+        strcat(settings.all_db_names, settings.db_names[i]);
+        strcat(settings.all_db_names, "\0");
+        strcat(settings.all_db_names, settings.db_names[i+1]);
+    }
+    strcat(settings.all_db_names, "\0\0");
+
+    printf("%s\n", settings.all_db_names);
 }
+

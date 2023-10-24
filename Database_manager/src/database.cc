@@ -14,11 +14,27 @@
  * 
  * @return int 
  */
-int ResetData()
+int ResetTable()
 {
     FreeTable(settings.db_Cols, settings.db_Rows);
+    settings.db_table_count = 0;
     settings.db_Cols = 0;
     settings.db_Rows = 0;
+
+    return 0;
+}
+
+/**
+ * @brief Get the Tables From D B object
+ * 
+ */
+int GetTablesFromDB(void *not_used, int argc, char **argv, char **azcolname)
+{
+    settings.db_table_count++;
+    settings.db_table_names = (char**)realloc(settings.db_table_names, settings.db_table_count * sizeof(char**));
+    settings.db_table_names[settings.db_table_count - 1] = (char*)calloc(kStringSize, sizeof(char));
+
+    settings.db_table_names[settings.db_table_count - 1] = argv[1];
 
     return 0;
 }

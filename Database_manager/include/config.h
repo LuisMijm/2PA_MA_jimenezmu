@@ -51,6 +51,8 @@ struct Settings{
     // Data base info
     int db_Rows;
     int db_Cols;
+    int db_database_counter;
+    int db_table_count;
 
     // int db_Current_Col_Rows[2];
     sqlite3 *db_current;
@@ -58,6 +60,7 @@ struct Settings{
     char** db_table_names;
     char** db_ColNames;
     char*** db_table_info;
+    char* all_db_names;
 };
 
 extern Settings settings;
@@ -68,6 +71,13 @@ extern Settings settings;
  * 
  */
 void InitSettings();
+
+/**
+ * @brief 
+ * 
+ */
+void GetTablesFromDB();
+
 
 /**
  * @brief function to connect to a database

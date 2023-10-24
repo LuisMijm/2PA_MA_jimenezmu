@@ -9,38 +9,53 @@
  * 
  */
 
-#include "../include/database.h"    
-#include "../include/ImGuiWindow.h"    
+#include <database.h>    
+#include <ImGuiWindow.h>    
+
+
+
 
 
 void DataBaseSelectedWindow()
-{
+{    
+
     ImGui::SetNextWindowSize(ImVec2(200, 110));
     ImGui::SetNextWindowPos(ImVec2(20, 20));
     ImGui::Begin("Select DataBase:", nullptr ,
                     ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
                     | ImGuiWindowFlags_NoCollapse);
-    ImGui::Combo("", &settings.current_database, 
-                "InternalDB\0MyDB\0");
+    // ImGui::Combo("", &settings.current_database,
+    //             settings.all_db_names);
+    // ImGui::Combo("", &settings.current_database,
+    //             "InternalDB\0MyDB\0\0");
+    ImGui::Combo("", &settings.current_database, settings.db_names, settings.db_database_counter);
     ImGui::Spacing();
     ImGui::Spacing();
     ImGui::Separator();
     ImGui::Spacing();
     ImGui::Spacing();
     if(ImGui::Button("Connect")){
-        char db_path[30] = "./data/databases/";
+        // char db_path[30] = "./data/databases/";
+        char db_path[100] = "../../data/internaldb/";
+
+        ResetTable();
+
+        RunQuery("SELECT name FROM sqlitemaster WHERE type = 'table' AND name NOT LIKE 'sqlite%'", settings.db_current, GetTablesFromDB);
+
         strcat(db_path, settings.db_names[settings.current_database]);
+        printf("%s\n", db_path);
         ConnectToDB(db_path, &settings.db_current, &settings.db_result_code);
     }
     ImGui::SameLine();
     if(ImGui::Button("Disconnect")){
-        // sqlite3_close(*settings.db_current);
+        sqlite3_close(settings.db_current);
+        printf("Disconected from database %s\n", settings.db_names[settings.current_database]);
     }
 
     ImGui::End();
 }
 
-void TableSelectedWindow(int selected_database, char current_database_name[])
+void TableSelectedWindow(int selected_database/* , char *current_database_name */)
 {
     ImGui::SetNextWindowSize(ImVec2(200, 110));
     ImGui::SetNextWindowPos(ImVec2(20, 150));
@@ -48,26 +63,32 @@ void TableSelectedWindow(int selected_database, char current_database_name[])
                     ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
                     | ImGuiWindowFlags_NoCollapse);
     
-    switch (selected_database)
-    {
-    case 0:
-            ImGui::Combo("", &settings.current_table,
-                        "Settings Table\0\0");
-        break;
-    case 1:
-        ImGui::Combo("", &settings.current_table,
-                        "Table1\0Table2\0Table3\0\0");
-        break;
-    default:
-        break;
-    }
+    // switch (selected_database)
+    // {
+    // case 0:
+    //         ImGui::Combo("", &settings.current_table,
+    //                     "Settings Table\0\0");
+    //     break;
+    // case 1:
+    //     ImGui::Combo("", &settings.current_table,
+    //                     "Table1\0Table2\0Table3\0\0");
+    //     break;
+    // default:
+    //     break;
+    // }
+
+    ImGui::Combo("", &settings.current_database, settings.db_table_names, settings.db_table_count);
+
     ImGui::Spacing();
     ImGui::Spacing();
     ImGui::Separator();
     ImGui::Spacing();
     ImGui::Spacing();
     if(ImGui::Button("OK")){
-        char db_table_query[30] = "SELECT * FROM ";
+        char db_table_query[300] = "SELECT * FROM ";
+
+        ResetTable();
+
         strcat(db_table_query, settings.db_table_names[settings.current_table]);
         settings.db_result_code = RunQuery(db_table_query, settings.db_current, GetDataFromDB);
     }
@@ -141,7 +162,7 @@ void QuerieWindow()
 
 void AllWindow(){
     DataBaseSelectedWindow();
-    TableSelectedWindow(settings.current_database, "DataBase");
+    TableSelectedWindow(settings.current_database/* , "DataBase" */);
     CurrentTableWindow(0, 0,"table", settings.db_Rows, settings.db_Cols);
     ConsoleWindow();
     QuerieWindow();

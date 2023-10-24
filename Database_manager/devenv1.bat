@@ -1,0 +1,1 @@
+devenv ./bin/debug/DatabaseManager_d.exe ./src/config.cc ./src/ImGuiWindow.cc ./src/database.cc ./src/main.cc
