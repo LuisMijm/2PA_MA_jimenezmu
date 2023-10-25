@@ -61,6 +61,9 @@ struct Settings{
     char** db_ColNames;
     char*** db_table_info;
     char* all_db_names;
+
+    //Message Console
+    char* console_msg;
 };
 
 extern Settings settings;

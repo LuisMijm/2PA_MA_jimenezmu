@@ -34,17 +34,20 @@ void DataBaseSelectedWindow()
     ImGui::Separator();
     ImGui::Spacing();
     ImGui::Spacing();
+
     if(ImGui::Button("Connect")){
         // char db_path[30] = "./data/databases/";
         char db_path[100] = "../../data/internaldb/";
 
         ResetTable();
 
-        RunQuery("SELECT name FROM sqlitemaster WHERE type = 'table' AND name NOT LIKE 'sqlite%'", settings.db_current, GetTablesFromDB);
 
         strcat(db_path, settings.db_names[settings.current_database]);
         // printf("%s\n", db_path);
         ConnectToDB(db_path, &settings.db_current, &settings.db_result_code);
+        RunQuery("SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite%'",
+                 settings.db_current, GetTablesFromDB);
+        
 
         printf("Connected to database %s\n", settings.db_names[settings.current_database]);
     }
@@ -86,7 +89,8 @@ void TableSelectedWindow(int selected_database/* , char *current_database_name *
     ImGui::Separator();
     ImGui::Spacing();
     ImGui::Spacing();
-    if(ImGui::Button("OK")){
+    if(ImGui::Button("OK") && settings.db_table_count != 0){
+
         char db_table_query[300] = "SELECT * FROM ";
 
         ResetTable();
@@ -135,6 +139,11 @@ void ConsoleWindow()
     ImGui::Begin("Console", nullptr , 
                     ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
                     | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
+    if(settings.console_msg != NULL){
+        ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), settings.console_msg);
+    }
+    
+    
     ImGui::End();
 }
 

@@ -24,10 +24,13 @@ int ResetTable()
 int GetTablesFromDB(void *not_used, int argc, char **argv, char **azcolname)
 {
     settings.db_table_count++;
-    settings.db_table_names = (char**)realloc(settings.db_table_names, settings.db_table_count * sizeof(char*));
+    settings.db_table_names = (char**)realloc(settings.db_table_names, 
+                               settings.db_table_count * sizeof(char*));
+                               
     settings.db_table_names[settings.db_table_count - 1] = (char*)calloc(kStringSize, sizeof(char));
 
     settings.db_table_names[settings.db_table_count - 1] = argv[1];
+    printf("%s\n", argv[1]);
 
     return 0;
 }

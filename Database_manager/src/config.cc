@@ -43,6 +43,9 @@ void InitSettings()
     settings.db_database_counter = 0;
     settings.db_table_count = 0;
 
+    settings.console_msg = 0;
+
+
     settings.db_table_names = (char **)realloc(settings.db_table_names, 1 * sizeof(char *));
 }
 
@@ -81,7 +84,18 @@ int RunQuery(char *query, sqlite3 *db, int callback(void *, int, char **, char *
     // settings.db_Rows[0] = sqlite3_column_count();
 
     result_code = sqlite3_exec(db, query,  callback, 0, &err_msg);
+    
+    if(err_msg != NULL){
+        
+        int size = strlen(err_msg);
 
+        if(settings.console_msg != nullptr){
+            settings.console_msg = nullptr;
+            free(settings.console_msg);
+        }
+        settings.console_msg = (char*)calloc(size, sizeof(char));
+        strcpy(settings.console_msg, err_msg);
+    }
     return result_code;
 }
 
@@ -108,8 +122,9 @@ void DataBaseNames(char* db_path)
 {
     DIR *directory;
     struct dirent *entry;
-    settings.db_database_counter = 0; 
     directory = opendir("../../data/internaldb/");
+    settings.db_database_counter = 0; 
+
     //if ((directory = opendir(db_path)) != NULL)
     if (directory != NULL)
     {
