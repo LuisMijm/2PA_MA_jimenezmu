@@ -9,11 +9,7 @@
 
 // typedef char* String;
 
-/**
- * @brief 
- * 
- * @return int 
- */
+
 int ResetTable()
 {
     FreeTable(settings.db_Cols, settings.db_Rows);
@@ -24,14 +20,11 @@ int ResetTable()
     return 0;
 }
 
-/**
- * @brief Get the Tables From D B object
- * 
- */
+
 int GetTablesFromDB(void *not_used, int argc, char **argv, char **azcolname)
 {
     settings.db_table_count++;
-    settings.db_table_names = (char**)realloc(settings.db_table_names, settings.db_table_count * sizeof(char**));
+    settings.db_table_names = (char**)realloc(settings.db_table_names, settings.db_table_count * sizeof(char*));
     settings.db_table_names[settings.db_table_count - 1] = (char*)calloc(kStringSize, sizeof(char));
 
     settings.db_table_names[settings.db_table_count - 1] = argv[1];
@@ -39,15 +32,7 @@ int GetTablesFromDB(void *not_used, int argc, char **argv, char **azcolname)
     return 0;
 }
 
-/**
- * @brief Get the Data From Data Base object
- * 
- * @param not_used 
- * @param argc 
- * @param argv 
- * @param azcolname 
- * @return int 
- */
+
 int GetDataFromDB(void *not_used, int argc, char **argv, char **azcolname)
 {
     not_used = 0;
@@ -84,12 +69,7 @@ int GetDataFromDB(void *not_used, int argc, char **argv, char **azcolname)
     return 0;
 }
 
-/**
- * @brief 
- * 
- * @param cols 
- * @param rows 
- */
+
 void FreeTable(int cols, int rows) {
 
     for(int i = 0; i < cols; i++)

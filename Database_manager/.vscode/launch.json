@@ -5,7 +5,7 @@
             "name": "C/C++: cl.exe build and debug active file",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "bin\\debug\\sql_con_d.exe",
+            "program": "bin\\debug\\DatabaseManager_d.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}\\..",

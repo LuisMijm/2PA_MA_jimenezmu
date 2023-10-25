@@ -43,8 +43,10 @@ void DataBaseSelectedWindow()
         RunQuery("SELECT name FROM sqlitemaster WHERE type = 'table' AND name NOT LIKE 'sqlite%'", settings.db_current, GetTablesFromDB);
 
         strcat(db_path, settings.db_names[settings.current_database]);
-        printf("%s\n", db_path);
+        // printf("%s\n", db_path);
         ConnectToDB(db_path, &settings.db_current, &settings.db_result_code);
+
+        printf("Connected to database %s\n", settings.db_names[settings.current_database]);
     }
     ImGui::SameLine();
     if(ImGui::Button("Disconnect")){

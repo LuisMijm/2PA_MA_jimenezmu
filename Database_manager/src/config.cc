@@ -42,6 +42,8 @@ void InitSettings()
     settings.querie_text[0] = '\0';
     settings.db_database_counter = 0;
     settings.db_table_count = 0;
+
+    settings.db_table_names = (char **)realloc(settings.db_table_names, 1 * sizeof(char *));
 }
 
 
@@ -134,14 +136,14 @@ void DataBaseNames(char* db_path)
         printf("Can't open folder to collect db names\n");
     }
 
-    for(int i = 0; i < 1; i++){
-        settings.all_db_names = (char*)realloc(settings.all_db_names, (kStringSize * (i + 1)) * sizeof(char));
-        strcat(settings.all_db_names, settings.db_names[i]);
-        strcat(settings.all_db_names, "\0");
-        strcat(settings.all_db_names, settings.db_names[i+1]);
-    }
-    strcat(settings.all_db_names, "\0\0");
+    // for(int i = 0; i < 1; i++){
+        // settings.all_db_names = (char*)realloc(settings.all_db_names, (kStringSize * (i + 1)) * sizeof(char));
+        // strcat(settings.all_db_names, settings.db_names[i]);
+        // strcat(settings.all_db_names, "\0");
+        // strcat(settings.all_db_names, settings.db_names[i+1]);
+    // }
+    // strcat(settings.all_db_names, "\0\0");
 
-    printf("%s\n", settings.all_db_names);
+    // printf("%s\n", settings.all_db_names);
 }
 

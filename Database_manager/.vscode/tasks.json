@@ -12,7 +12,7 @@
                 "/MDd",
                 "/Fobuild\\debug\\",
                 "/Fdbuild\\debug\\",
-                "/Febin\\debug\\sql_con_d.exe",
+                "/Febin\\debug\\DatabaseManager_d.exe",
                 "src\\*",
                 "-I",
                 ".\\deps\\esat\\include",
