@@ -76,6 +76,23 @@ int ConnectToDB(char* db_path, sqlite3** db, int* result_code)
 //     return result_code;
 // }
 
+void AddErrorMsg(char *err_msg)
+{
+    int err_size = strlen(err_msg);
+    int string_size = strlen(settings.console_msg);
+
+    // if(settings.console_msg != nullptr){
+    //     free(settings.console_msg);
+    //     settings.console_msg = nullptr;
+    // }
+
+    settings.console_msg = (char *)realloc(settings.console_msg, (err_size + string_size + 3) * sizeof(char));
+
+    // strcpy(settings.console_msg, err_msg);
+    strcat(settings.console_msg, "\n");
+    strcat(settings.console_msg, err_msg);
+}
+
 int RunQuery(char *query, sqlite3 *db, int callback(void *, int, char **, char **))
 {
     int result_code;
@@ -84,18 +101,14 @@ int RunQuery(char *query, sqlite3 *db, int callback(void *, int, char **, char *
     // settings.db_Rows[0] = sqlite3_column_count();
 
     result_code = sqlite3_exec(db, query,  callback, 0, &err_msg);
-    
-    if(err_msg != NULL){
-        
-        int size = strlen(err_msg);
 
-        if(settings.console_msg != nullptr){
-            settings.console_msg = nullptr;
-            free(settings.console_msg);
-        }
-        settings.console_msg = (char*)calloc(size, sizeof(char));
-        strcpy(settings.console_msg, err_msg);
+    if (err_msg != nullptr)
+    {
+        AddErrorMsg(err_msg);
     }
+
+    printf("%s", err_msg);
+
     return result_code;
 }
 

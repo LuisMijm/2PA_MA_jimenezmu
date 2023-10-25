@@ -53,6 +53,7 @@ void DataBaseSelectedWindow()
     }
     ImGui::SameLine();
     if(ImGui::Button("Disconnect")){
+        ResetTable();
         sqlite3_close(settings.db_current);
         printf("Disconected from database %s\n", settings.db_names[settings.current_database]);
     }

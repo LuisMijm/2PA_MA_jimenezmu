@@ -92,6 +92,10 @@ void GetTablesFromDB();
  */
 int ConnectToDB(char *db_path, sqlite3 **db, int *result_code);
 
+
+
+void AddErrorMsg(char *err_msg);
+
 /**
  * @brief function that makes a query in the db selected using the callback given
  * 
