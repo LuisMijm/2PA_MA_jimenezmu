@@ -81,18 +81,20 @@ int ConnectToDB(char* db_path, sqlite3** db, int* result_code)
 void AddErrorMsg(char *err_msg)
 {
     int err_size = strlen(err_msg);
-    int string_size = strlen(settings.console_msg);
+    int string_size = strlen(settings.console_msg[settings.n_msg]);
 
     // if(settings.console_msg != nullptr){
     //     free(settings.console_msg);
     //     settings.console_msg = nullptr;
     // }
 
-    settings.console_msg = (char *)realloc(settings.console_msg, (err_size + string_size + 3) * sizeof(char));
-    settings.n_msg++;
+    settings.console_msg[settings.n_msg] = (char *)realloc(settings.console_msg[settings.n_msg], 
+                                                        (err_size + string_size + 3) * sizeof(char));
     settings.type_msg = 0;
-    strcat(settings.console_msg, "\n");
-    strcat(settings.console_msg, err_msg);
+    strcat(settings.console_msg[settings.n_msg], "\n");
+    strcat(settings.console_msg[settings.n_msg], err_msg);
+    settings.n_msg++;
+    
 }
 
 int RunQuery(char *query, sqlite3 *db, int callback(void *, int, char **, char **))

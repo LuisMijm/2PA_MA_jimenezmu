@@ -63,7 +63,7 @@ struct Settings{
     char* all_db_names;
 
     //Message Console
-    char* console_msg;
+    char* console_msg[100];
     int type_msg;
     int n_msg;
 };

@@ -12,19 +12,19 @@
 #include <database.h>    
 #include <ImGuiWindow.h>
 
-void ConsoleMessage(int type)
+void ConsoleMessage(int type, int i)
 {
-    if (settings.console_msg != NULL)
+    if (settings.console_msg[i] != NULL)
     {
         switch (type)
         {
         //error messages type (red)
         case 0:
-            ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), settings.console_msg);
+            ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), settings.console_msg[i]);
             break;
         //console message type (white)
         case 1:
-            ImGui::Text(settings.console_msg);
+            ImGui::Text(settings.console_msg[i]);
             break;
 
         default:
@@ -32,6 +32,11 @@ void ConsoleMessage(int type)
         }
     
     }
+    if(settings.n_msg == 99)
+    {
+        settings.n_msg = 0;
+    }
+    
 }
 
 void DataBaseSelectedWindow()
@@ -71,9 +76,11 @@ void DataBaseSelectedWindow()
         // For show console message
         settings.type_msg = 1;
         int msg_size = strlen("Connected to database ") + strlen(settings.db_names[settings.current_database]);
-        settings.console_msg = (char *)calloc(msg_size, sizeof(char));
-        strcat(settings.console_msg, "\nConnected to database ");
-        strcat(settings.console_msg, settings.db_names[settings.current_database]);
+        settings.console_msg[settings.n_msg] = (char *)calloc(msg_size, sizeof(char));
+        strcat(settings.console_msg[settings.n_msg], "\nConnected to database ");
+        strcat(settings.console_msg[settings.n_msg], settings.db_names[settings.current_database]);
+        settings.n_msg++;
+
     }
     ImGui::SameLine();
     if(ImGui::Button("Disconnect")){
@@ -84,9 +91,10 @@ void DataBaseSelectedWindow()
         //For show console message
         settings.type_msg = 1;
         int msg_size = strlen("Disconected from database ") + strlen(settings.db_names[settings.current_database]);
-        settings.console_msg = (char *)calloc(msg_size, sizeof(char));
-        strcat(settings.console_msg, "\nDisconected from database ");
-        strcat(settings.console_msg, settings.db_names[settings.current_database]);
+        settings.console_msg[settings.n_msg] = (char *)calloc(msg_size, sizeof(char));
+        strcat(settings.console_msg[settings.n_msg], "\nDisconected from database ");
+        strcat(settings.console_msg[settings.n_msg], settings.db_names[settings.current_database]);
+        settings.n_msg++;
     }
 
     ImGui::End();
@@ -157,21 +165,27 @@ void ConsoleWindow()
     ImGui::SetNextWindowPos(ImVec2(240, 280));
     ImGui::Begin("Console", nullptr , 
                     ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
-                    | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
-    if (ImGui::BeginChild("Subventana", ImVec2(80, 30), false))
+                    | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar |
+                    ImGuiWindowFlags_NoScrollbar);
+    
+    if (ImGui::BeginChild("Subventana", ImVec2(520, 110), true))
     {
-        if (ImGui::Button("Clear"))
-        {
-            //solucionar liberar de memoria
-            settings.console_msg = nullptr;
-            free(settings.console_msg);
+        for(int i = settings.n_msg; i > 0; i--){
+            ConsoleMessage(settings.type_msg, i);
             
         }
         ImGui::EndChild();
     }
-    ConsoleMessage(settings.type_msg);
-    
 
+    if (ImGui::Button("Clear"))
+    {
+        //solucionar liberar de memoria
+        for(int i = 0; i < settings.n_msg; i++){
+            /* free(settings.console_msg[i]); */
+            settings.console_msg[i] = nullptr;
+        }
+        settings.n_msg = 0;   
+    }
     ImGui::End();
 }
 
