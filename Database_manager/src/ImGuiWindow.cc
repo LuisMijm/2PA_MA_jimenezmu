@@ -162,7 +162,7 @@ void ConsoleWindow()
     {
         if (ImGui::Button("Clear"))
         {
-            /* settings.console_msg[0] = '\0'; */
+            //solucionar liberar de memoria
             settings.console_msg = nullptr;
             free(settings.console_msg);
             

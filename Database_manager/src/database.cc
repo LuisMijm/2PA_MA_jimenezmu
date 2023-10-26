@@ -41,7 +41,7 @@ int GetTablesFromDB(void *not_used, int argc, char **argv, char **azcolname)
 int GetDataFromDB(void *not_used, int argc, char **argv, char **azcolname)
 {
     not_used = 0;
-
+    printf("Rows: %d \n", settings.db_Rows);
     if (settings.db_Rows == 0)
     {
         settings.db_Cols = argc;
