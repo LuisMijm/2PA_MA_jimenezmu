@@ -64,6 +64,7 @@ struct Settings{
 
     //Message Console
     char* console_msg;
+    int type_msg;
 };
 
 extern Settings settings;

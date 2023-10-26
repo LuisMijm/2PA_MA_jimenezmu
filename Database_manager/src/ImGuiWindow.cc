@@ -8,13 +8,31 @@
  * @copyright Copyright (c) 2023
  * 
  */
-
+#include <include.h>
 #include <database.h>    
-#include <ImGuiWindow.h>    
+#include <ImGuiWindow.h>
 
+void ConsoleMessage(int type)
+{
+    if (settings.console_msg != NULL)
+    {
+        switch (type)
+        {
+        //error messages type (red)
+        case 0:
+            ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), settings.console_msg);
+            break;
+        //console message type (white)
+        case 1:
+            ImGui::Text(settings.console_msg);
+            break;
 
-
-
+        default:
+            break;
+        }
+    
+    }
+}
 
 void DataBaseSelectedWindow()
 {    
@@ -49,13 +67,26 @@ void DataBaseSelectedWindow()
                  settings.db_current, GetTablesFromDB);
         
 
-        printf("Connected to database %s\n", settings.db_names[settings.current_database]);
+        /* printf("Connected to database %s\n", settings.db_names[settings.current_database]); */
+        // For show console message
+        settings.type_msg = 1;
+        int msg_size = strlen("Connected to database ") + strlen(settings.db_names[settings.current_database]);
+        settings.console_msg = (char *)calloc(msg_size, sizeof(char));
+        strcat(settings.console_msg, "\nConnected to database ");
+        strcat(settings.console_msg, settings.db_names[settings.current_database]);
     }
     ImGui::SameLine();
     if(ImGui::Button("Disconnect")){
         ResetTable();
         sqlite3_close(settings.db_current);
-        printf("Disconected from database %s\n", settings.db_names[settings.current_database]);
+        /* printf("Disconected from database %s\n", settings.db_names[settings.current_database]); */
+
+        //For show console message
+        settings.type_msg = 1;
+        int msg_size = strlen("Disconected from database ") + strlen(settings.db_names[settings.current_database]);
+        settings.console_msg = (char *)calloc(msg_size, sizeof(char));
+        strcat(settings.console_msg, "\nDisconected from database ");
+        strcat(settings.console_msg, settings.db_names[settings.current_database]);
     }
 
     ImGui::End();
@@ -69,21 +100,8 @@ void TableSelectedWindow(int selected_database/* , char *current_database_name *
                     ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
                     | ImGuiWindowFlags_NoCollapse);
     
-    // switch (selected_database)
-    // {
-    // case 0:
-    //         ImGui::Combo("", &settings.current_table,
-    //                     "Settings Table\0\0");
-    //     break;
-    // case 1:
-    //     ImGui::Combo("", &settings.current_table,
-    //                     "Table1\0Table2\0Table3\0\0");
-    //     break;
-    // default:
-    //     break;
-    // }
 
-    ImGui::Combo("", &settings.current_database, settings.db_table_names, settings.db_table_count);
+    ImGui::Combo(" ", &settings.current_table, settings.db_table_names, settings.db_table_count);
 
     ImGui::Spacing();
     ImGui::Spacing();
@@ -140,11 +158,8 @@ void ConsoleWindow()
     ImGui::Begin("Console", nullptr , 
                     ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
                     | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
-    if(settings.console_msg != NULL){
-        ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), settings.console_msg);
-    }
-    
-    
+    ConsoleMessage(settings.type_msg);
+
     ImGui::End();
 }
 

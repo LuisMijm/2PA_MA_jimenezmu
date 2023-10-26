@@ -44,6 +44,7 @@ void InitSettings()
     settings.db_table_count = 0;
 
     settings.console_msg = 0;
+    settings.type_msg = 1;
 
 
     settings.db_table_names = (char **)realloc(settings.db_table_names, 1 * sizeof(char *));
@@ -86,9 +87,10 @@ void AddErrorMsg(char *err_msg)
     //     settings.console_msg = nullptr;
     // }
 
+    
     settings.console_msg = (char *)realloc(settings.console_msg, (err_size + string_size + 3) * sizeof(char));
 
-    // strcpy(settings.console_msg, err_msg);
+    settings.type_msg = 0;
     strcat(settings.console_msg, "\n");
     strcat(settings.console_msg, err_msg);
 }
@@ -174,4 +176,5 @@ void DataBaseNames(char* db_path)
 
     // printf("%s\n", settings.all_db_names);
 }
+
 
