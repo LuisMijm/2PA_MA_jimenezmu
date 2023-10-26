@@ -158,7 +158,19 @@ void ConsoleWindow()
     ImGui::Begin("Console", nullptr , 
                     ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
                     | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
+    if (ImGui::BeginChild("Subventana", ImVec2(80, 30), false))
+    {
+        if (ImGui::Button("Clear"))
+        {
+            /* settings.console_msg[0] = '\0'; */
+            settings.console_msg = nullptr;
+            free(settings.console_msg);
+            
+        }
+        ImGui::EndChild();
+    }
     ConsoleMessage(settings.type_msg);
+    
 
     ImGui::End();
 }
@@ -180,6 +192,8 @@ void QuerieWindow()
         settings.db_result_code = RunQuery(settings.querie_text, settings.db_current, GetDataFromDB);
     }
     ImGui::SameLine();
+
+    
     if(ImGui::Button("Clear"))
     {
         settings.querie_text[0] = '\0';
