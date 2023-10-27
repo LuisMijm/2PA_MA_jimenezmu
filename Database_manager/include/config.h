@@ -53,6 +53,7 @@ struct Settings{
     int db_Cols;
     int db_database_counter;
     int db_table_count;
+    bool db_connected;
 
     // int db_Current_Col_Rows[2];
     sqlite3 *db_current;

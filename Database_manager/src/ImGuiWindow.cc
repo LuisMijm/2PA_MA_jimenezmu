@@ -47,7 +47,8 @@ void DataBaseSelectedWindow()
         ConnectToDB(db_path, &settings.db_current, &settings.db_result_code);
         RunQuery("SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite%'",
                  settings.db_current, GetTablesFromDB);
-        
+
+        settings.db_connected = false;
 
         printf("Connected to database %s\n", settings.db_names[settings.current_database]);
     }
@@ -55,6 +56,8 @@ void DataBaseSelectedWindow()
     if(ImGui::Button("Disconnect")){
         ResetTable();
         sqlite3_close(settings.db_current);
+        settings.db_connected = false;
+
         printf("Disconected from database %s\n", settings.db_names[settings.current_database]);
     }
 
@@ -94,10 +97,11 @@ void TableSelectedWindow(int selected_database/* , char *current_database_name *
 
         char db_table_query[300] = "SELECT * FROM ";
 
-        ResetTable();
+        // ResetTable();
 
         strcat(db_table_query, settings.db_table_names[settings.current_table]);
         settings.db_result_code = RunQuery(db_table_query, settings.db_current, GetDataFromDB);
+        settings.db_connected = true;
     }
     ImGui::SameLine();
     
@@ -115,22 +119,66 @@ void CurrentTableWindow(int selected_table, int database_selected,
     ImGui::Begin(current_table_name, nullptr , 
                     ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
                     | ImGuiWindowFlags_NoCollapse );
-    if (ImGui::BeginTable("Tabla1", 3)) {
-        ImGui::TableSetupColumn("Name");
-        ImGui::TableSetupColumn("DataType");
-        ImGui::TableSetupColumn("Value");
-        for (int row = 0; row < n_db_rows; row++) {
+    // if (ImGui::BeginTable("Tabla1", 3)) {
+    //     ImGui::TableSetupColumn("Name");
+    //     ImGui::TableSetupColumn("DataType");
+    //     ImGui::TableSetupColumn("Value");
+    //     for (int row = 0; row < n_db_rows; row++) {
+    //         ImGui::TableNextRow();
+    //         for (int col = 0; col < n_db_cols; col++) {
+    //             ImGui::TableSetColumnIndex(col);
+    //             ImGui::Text("Fila %d, Col %d", row, col);
+    //         }
+    //     }
+    //     ImGui::EndTable();
+    // }
+
+    if (ImGui::BeginTable("HorizontalTable", settings.db_Cols, 
+                            ImGuiTableFlags_ScrollX | 
+                            ImGuiTableFlags_ScrollY | 
+                            ImGuiTableFlags_RowBg | 
+                            ImGuiTableFlags_BordersOuter | 
+                            ImGuiTableFlags_BordersV))
+    {
+        // Freeze the first column
+        ImGui::TableSetupScrollFreeze(1, 1);
+
+        for (int i = 0; i < settings.db_Cols; i++)
+        {
+            ImGui::TableSetupColumn(settings.db_ColNames[i], ImGuiTableColumnFlags_None);
+        }
+        
+        // Define column headers
+       
+
+        // End the header row
+        ImGui::TableHeadersRow();
+
+        // Insert data
+        for (int row = 0; row < settings.db_Rows; row++)
+        {
             ImGui::TableNextRow();
-            for (int col = 0; col < n_db_cols; col++) {
+            for (int col = 0; col < settings.db_Cols; col++)
+            {
                 ImGui::TableSetColumnIndex(col);
-                ImGui::Text("Fila %d, Col %d", row, col);
+                ImGui::Text("Data %d-%d", row, col);
+                
+                // switch ()
+                // {
+                // case /* constant-expression */:
+                //     /* code */
+                //     break;
+                
+                // default:
+                //     break;
+                // }
             }
         }
+
         ImGui::EndTable();
     }
 
-    
-    ImGui::End();
+        ImGui::End();
 }
 
 void ConsoleWindow()
@@ -175,7 +223,9 @@ void QuerieWindow()
 void AllWindow(){
     DataBaseSelectedWindow();
     TableSelectedWindow(settings.current_database/* , "DataBase" */);
+    if(settings.db_connected){
     CurrentTableWindow(0, 0,"table", settings.db_Rows, settings.db_Cols);
+    }
     ConsoleWindow();
     QuerieWindow();
 }

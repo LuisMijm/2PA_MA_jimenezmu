@@ -37,13 +37,15 @@ void InitSettings()
     settings.current_database = 0;
     settings.current_table = 0;
 
+    settings.db_connected = false;
+
     
 
     settings.querie_text[0] = '\0';
     settings.db_database_counter = 0;
     settings.db_table_count = 0;
 
-    settings.console_msg = 0;
+    settings.console_msg = (char *)calloc('\0', kStringSize * sizeof(char));
 
 
     settings.db_table_names = (char **)realloc(settings.db_table_names, 1 * sizeof(char *));
@@ -96,18 +98,22 @@ void AddErrorMsg(char *err_msg)
 int RunQuery(char *query, sqlite3 *db, int callback(void *, int, char **, char **))
 {
     int result_code;
-    char* err_msg = 0;
+    char* err_msg = (char*)calloc('\0', 100 * sizeof(char));
 
     // settings.db_Rows[0] = sqlite3_column_count();
 
     result_code = sqlite3_exec(db, query,  callback, 0, &err_msg);
-
+    
+    printf("\n");
+    printf("error: %s", err_msg);
+    printf("\n");
+    
     if (err_msg != nullptr)
     {
         AddErrorMsg(err_msg);
     }
 
-    printf("%s", err_msg);
+    free(err_msg);
 
     return result_code;
 }
