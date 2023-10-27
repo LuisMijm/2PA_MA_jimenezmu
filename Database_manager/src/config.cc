@@ -45,9 +45,16 @@ void InitSettings()
     settings.db_database_counter = 0;
     settings.db_table_count = 0;
 
+<<<<<<< HEAD
     settings.console_msg = (char *)calloc('\0', kStringSize * sizeof(char));
 
+=======
+    settings.type_msg = 1;
+    settings.n_msg = 0;
+>>>>>>> bedc346754d5e0241bf207e5878439a9e4acd605
 
+    
+    
     settings.db_table_names = (char **)realloc(settings.db_table_names, 1 * sizeof(char *));
 }
 
@@ -81,18 +88,20 @@ int ConnectToDB(char* db_path, sqlite3** db, int* result_code)
 void AddErrorMsg(char *err_msg)
 {
     int err_size = strlen(err_msg);
-    int string_size = strlen(settings.console_msg);
+    int string_size = strlen(settings.console_msg[settings.n_msg]);
 
     // if(settings.console_msg != nullptr){
     //     free(settings.console_msg);
     //     settings.console_msg = nullptr;
     // }
 
-    settings.console_msg = (char *)realloc(settings.console_msg, (err_size + string_size + 3) * sizeof(char));
-
-    // strcpy(settings.console_msg, err_msg);
-    strcat(settings.console_msg, "\n");
-    strcat(settings.console_msg, err_msg);
+    settings.console_msg[settings.n_msg] = (char *)realloc(settings.console_msg[settings.n_msg], 
+                                                        (err_size + string_size + 3) * sizeof(char));
+    settings.type_msg = 0;
+    strcat(settings.console_msg[settings.n_msg], "\n");
+    strcat(settings.console_msg[settings.n_msg], err_msg);
+    settings.n_msg++;
+    
 }
 
 int RunQuery(char *query, sqlite3 *db, int callback(void *, int, char **, char **))
@@ -180,4 +189,5 @@ void DataBaseNames(char* db_path)
 
     // printf("%s\n", settings.all_db_names);
 }
+
 
