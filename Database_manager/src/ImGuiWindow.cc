@@ -30,13 +30,11 @@ void ConsoleMessage(int type, int i)
         default:
             break;
         }
-    
     }
     if(settings.n_msg == 99)
     {
         settings.n_msg = 0;
     }
-    
 }
 
 void DataBaseSelectedWindow()
@@ -47,10 +45,7 @@ void DataBaseSelectedWindow()
     ImGui::Begin("Select DataBase:", nullptr ,
                     ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
                     | ImGuiWindowFlags_NoCollapse);
-    // ImGui::Combo("", &settings.current_database,
-    //             settings.all_db_names);
-    // ImGui::Combo("", &settings.current_database,
-    //             "InternalDB\0MyDB\0\0");
+
     ImGui::Combo("", &settings.current_database, settings.db_names, settings.db_database_counter);
     ImGui::Spacing();
     ImGui::Spacing();
@@ -59,11 +54,10 @@ void DataBaseSelectedWindow()
     ImGui::Spacing();
 
     if(ImGui::Button("Connect")){
-        // char db_path[30] = "./data/databases/";
         char db_path[100] = "../../data/internaldb/";
 
         ResetTable();
-
+        settings.db_table_count = 0;
 
         strcat(db_path, settings.db_names[settings.current_database]);
         // printf("%s\n", db_path);
@@ -84,8 +78,11 @@ void DataBaseSelectedWindow()
 
     }
     ImGui::SameLine();
+    
     if(ImGui::Button("Disconnect")){
         ResetTable();
+        settings.db_table_count = 0;
+
         sqlite3_close(settings.db_current);
         settings.db_connected = false;
 
@@ -120,11 +117,11 @@ void TableSelectedWindow(int selected_database/* , char *current_database_name *
     ImGui::Separator();
     ImGui::Spacing();
     ImGui::Spacing();
-    if(ImGui::Button("OK") && settings.db_table_count != 0){
+    if(ImGui::Button("OK") && settings.db_table_count >= 0){
 
         char db_table_query[300] = "SELECT * FROM ";
 
-        // ResetTable();
+        ResetTable();
 
         strcat(db_table_query, settings.db_table_names[settings.current_table]);
         settings.db_result_code = RunQuery(db_table_query, settings.db_current, GetDataFromDB);
@@ -146,19 +143,6 @@ void CurrentTableWindow(int selected_table, int database_selected,
     ImGui::Begin(current_table_name, nullptr , 
                     ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
                     | ImGuiWindowFlags_NoCollapse );
-    // if (ImGui::BeginTable("Tabla1", 3)) {
-    //     ImGui::TableSetupColumn("Name");
-    //     ImGui::TableSetupColumn("DataType");
-    //     ImGui::TableSetupColumn("Value");
-    //     for (int row = 0; row < n_db_rows; row++) {
-    //         ImGui::TableNextRow();
-    //         for (int col = 0; col < n_db_cols; col++) {
-    //             ImGui::TableSetColumnIndex(col);
-    //             ImGui::Text("Fila %d, Col %d", row, col);
-    //         }
-    //     }
-    //     ImGui::EndTable();
-    // }
 
     if (ImGui::BeginTable("HorizontalTable", settings.db_Cols, 
                             ImGuiTableFlags_ScrollX | 
@@ -188,7 +172,7 @@ void CurrentTableWindow(int selected_table, int database_selected,
             for (int col = 0; col < settings.db_Cols; col++)
             {
                 ImGui::TableSetColumnIndex(col);
-                ImGui::Text("Data %d-%d", row, col);
+                ImGui::Text(settings.db_table_info[row][col]);
                 
                 // switch ()
                 // {
@@ -250,9 +234,20 @@ void QuerieWindow()
                               ImGuiInputTextFlags_AllowTabInput);
     if(ImGui::Button("Submit"))
     {
-        FreeTable(settings.db_Cols, settings.db_Rows);
-        settings.db_Cols = settings.db_Rows = 0;
+        // FreeTable(settings.db_Cols, settings.db_Rows);
+        // settings.db_Cols = settings.db_Rows = 0;
+        ResetTable();
+        // settings.db_table_count = 0;
         settings.db_result_code = RunQuery(settings.querie_text, settings.db_current, GetDataFromDB);
+        if (0 == settings.db_result_code)
+        {
+            settings.db_connected = true;
+
+        }else
+        {
+            ResetTable();
+            settings.db_connected = false;
+        }
     }
     ImGui::SameLine();
 
@@ -268,7 +263,7 @@ void AllWindow(){
     DataBaseSelectedWindow();
     TableSelectedWindow(settings.current_database/* , "DataBase" */);
     if(settings.db_connected){
-    CurrentTableWindow(0, 0,"table", settings.db_Rows, settings.db_Cols);
+        CurrentTableWindow(0, 0,"table", settings.db_Rows, settings.db_Cols);
     }
     ConsoleWindow();
     QuerieWindow();

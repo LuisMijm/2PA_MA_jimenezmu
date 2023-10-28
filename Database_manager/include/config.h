@@ -15,7 +15,7 @@
 
 #include <esat_extra/sqlite3.h>
 
-int const kStringSize = 16;
+int const kStringSize = 100;
 
 /**
  * @brief struct to save all the data that the program needs

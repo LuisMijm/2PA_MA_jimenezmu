@@ -13,7 +13,7 @@
 int ResetTable()
 {
     FreeTable(settings.db_Cols, settings.db_Rows);
-    settings.db_table_count = 0;
+    // settings.db_table_count = 0;
     settings.db_Cols = 0;
     settings.db_Rows = 0;
 
@@ -41,7 +41,7 @@ int GetTablesFromDB(void *not_used, int argc, char **argv, char **azcolname)
 int GetDataFromDB(void *not_used, int argc, char **argv, char **azcolname)
 {
     not_used = 0;
-    printf("Rows: %d \n", settings.db_Rows);
+    // printf("Rows: %d \n", settings.db_Rows);
     if (settings.db_Rows == 0)
     {
         settings.db_Cols = argc;
@@ -79,7 +79,11 @@ void FreeTable(int cols, int rows) {
 
     for(int i = 0; i < cols; i++)
     {
+        // printf("free col: %d\n", i);
         for(int j = 0; j < rows; j++){
+            // printf("free row: %d\n", j);
+            // printf("table info 1: %s\n", settings.db_table_info[j][i]);
+
             free(settings.db_table_info[j][i]);
             settings.db_table_info[j][i] = nullptr;
         }
