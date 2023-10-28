@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
 #include <esat_extra/sqlite3.h>
 
 #include <config.h>
@@ -41,34 +43,48 @@ int GetTablesFromDB(void *not_used, int argc, char **argv, char **azcolname)
 int GetDataFromDB(void *not_used, int argc, char **argv, char **azcolname)
 {
     not_used = 0;
-    // printf("Rows: %d \n", settings.db_Rows);
-    if (settings.db_Rows == 0)
+    if (argc > 0 && argc <= 64)
     {
-        settings.db_Cols = argc;
-        settings.db_ColNames = (char**)realloc(settings.db_ColNames, argc * sizeof(char*));
+        // printf("Rows: %d \n", settings.db_Rows);
+        if (settings.db_Rows == 0)
+        {
+            settings.db_Cols = argc;
+            settings.db_ColNames = (char **)realloc(settings.db_ColNames, argc * sizeof(char *));
 
+            for (int i = 0; i < argc; i++)
+            {
+                settings.db_ColNames[i] = (char *)calloc(kStringSize, sizeof(char));
+
+                sscanf(azcolname[i], "%s", settings.db_ColNames[i]);
+            }
+        }
+
+        settings.db_Rows++;
+
+        // Row memory reserve
+        settings.db_table_info = (char ***)realloc(settings.db_table_info, settings.db_Rows * sizeof(char **));
+
+        // Col memory reserve
+        settings.db_table_info[settings.db_Rows - 1] = (char **)calloc(argc, sizeof(char *));
+
+        // Strings memory reserve
         for (int i = 0; i < argc; i++)
         {
-            settings.db_ColNames[i] = (char *)calloc(kStringSize,sizeof(char));
-
-            sscanf(azcolname[i], "%s", settings.db_ColNames[i]);
-        }        
-    }
-
-    settings.db_Rows++;
-
-    // Row memory reserve
-    settings.db_table_info = (char ***)realloc(settings.db_table_info, settings.db_Rows * sizeof(char **));
-
-    // Col memory reserve
-    settings.db_table_info[settings.db_Rows - 1] = (char **)calloc(argc,sizeof(char *));
-
-    // Strings memory reserve
-    for (int i = 0; i < argc; i++)
+            if (NULL != argv[i])
+            {
+                settings.db_table_info[settings.db_Rows - 1][i] = (char *)calloc(strlen(argv[i]) + kStringSize, sizeof(char));
+                sscanf(argv[i], "%[^\n]", settings.db_table_info[settings.db_Rows - 1][i]);
+            }
+            else
+            {
+                // sscanf("NULL", "%s", settings.db_table_info[settings.db_Rows - 1][i]);
+                settings.db_table_info[settings.db_Rows - 1][i] = (char *)calloc(kStringSize, sizeof(char));
+                strcpy(settings.db_table_info[settings.db_Rows - 1][i], "NULL");
+            }
+        }
+    }else
     {
-        settings.db_table_info[settings.db_Rows - 1][i] = (char *)calloc(kStringSize, sizeof(char));
-
-        sscanf(argv[i], "%s", settings.db_table_info[settings.db_Rows - 1][i]);
+        AddErrorMsg("Asertion failed: columns_count > 0 && coulumns_count <= 64 && Only 1..64 \"columns allowed!\"");
     }
 
     return 0;

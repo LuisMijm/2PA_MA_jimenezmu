@@ -8,7 +8,7 @@ int esat::main(int argc, char **argv)
 
     InitSettings();
 
-    DataBaseNames("../../data/internaldb/");
+    DataBaseNames("../../data/databases/");
 
     ConnectToDB("../../data/internaldb/internaldb.db", &settings.db_internal, &settings.db_result_code);
     settings.db_result_code = RunQuery("SELECT * FROM settings", settings.db_internal, SetSettings);

@@ -54,7 +54,7 @@ void DataBaseSelectedWindow()
     ImGui::Spacing();
 
     if(ImGui::Button("Connect")){
-        char db_path[100] = "../../data/internaldb/";
+        char db_path[100] = "../../data/databases/";
 
         ResetTable();
         settings.db_table_count = 0;
@@ -118,7 +118,7 @@ void TableSelectedWindow(int selected_database/* , char *current_database_name *
     ImGui::Spacing();
     ImGui::Spacing();
     if(ImGui::Button("OK") && settings.db_table_count >= 0){
-
+            
         char db_table_query[300] = "SELECT * FROM ";
 
         ResetTable();
@@ -248,6 +248,11 @@ void QuerieWindow()
             ResetTable();
             settings.db_connected = false;
         }
+        if (settings.db_Cols <= 0 || settings.db_Cols > 64)
+        {
+            AddErrorMsg("Unable to acces table: Only 1-64 columns allowed");
+        }
+        
     }
     ImGui::SameLine();
 
@@ -263,7 +268,10 @@ void AllWindow(){
     DataBaseSelectedWindow();
     TableSelectedWindow(settings.current_database/* , "DataBase" */);
     if(settings.db_connected){
-        CurrentTableWindow(0, 0,"table", settings.db_Rows, settings.db_Cols);
+        if (settings.db_Cols > 0 && settings.db_Cols <= 64)
+        {
+            CurrentTableWindow(0, 0, settings.db_table_names[settings.current_table], settings.db_Rows, settings.db_Cols);
+        }
     }
     ConsoleWindow();
     QuerieWindow();

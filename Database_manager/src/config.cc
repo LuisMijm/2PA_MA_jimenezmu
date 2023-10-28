@@ -104,7 +104,6 @@ int RunQuery(char *query, sqlite3 *db, int callback(void *, int, char **, char *
     int result_code;
     char* err_msg = (char*)calloc('\0', 100 * sizeof(char));
 
-
     result_code = sqlite3_exec(db, query,  callback, 0, &err_msg);
     
     printf("\n");
@@ -115,8 +114,6 @@ int RunQuery(char *query, sqlite3 *db, int callback(void *, int, char **, char *
     {
         AddErrorMsg(err_msg);
     }
-
-    /* free(err_msg); */
 
     return result_code;
 }
@@ -144,7 +141,7 @@ void DataBaseNames(char* db_path)
 {
     DIR *directory;
     struct dirent *entry;
-    directory = opendir("../../data/internaldb/");
+    directory = opendir("../../data/databases/");
     settings.db_database_counter = 0; 
 
     //if ((directory = opendir(db_path)) != NULL)
