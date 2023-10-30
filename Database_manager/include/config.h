@@ -18,6 +18,32 @@
 int const kStringSize = 100;
 
 /**
+ * @struct Vec2
+ * @brief Represents a two-dimensional vector.
+ *
+ * The `Vec2` struct defines a two-dimensional vector with `x` and `y` components.
+ */
+struct Vec2{
+    float x, y;
+};
+
+/**
+ * @struct WindowSettings
+ * @brief Represents settings for the ImGui window.
+ *
+ * The `WindowSettings` struct holds configuration options for the ImGui 
+ * graphical window, including the size and position of the window.
+ */
+struct WindowSettings{
+    Vec2 size, position;
+};
+
+struct ConsoleMessage{
+    char* string;
+    int type;
+};
+
+/**
  * @brief struct to save all the data that the program needs
  * 
  */
@@ -40,22 +66,12 @@ struct Settings{
     int db_result_code;
     sqlite3 *db_internal;
 
-    // selected database & table
-    int current_database;
-    int current_table;
-
-    //Input text Window Querie
-    char querie_text[512];
-
-
     // Data base info
     int db_Rows;
     int db_Cols;
     int db_database_counter;
     int db_table_count;
     bool db_connected;
-
-    // int db_Current_Col_Rows[2];
     sqlite3 *db_current;
     char** db_names;
     char** db_table_names;
@@ -63,8 +79,19 @@ struct Settings{
     char*** db_table_info;
     char* all_db_names;
 
+    // selected database & table
+    int current_database;
+    int current_table;
+
+
+    // ImGui windows settings
+    WindowSettings windowSettings[5];
+
+    // Input text Window Querie
+    char querie_text[512];
+
     //Message Console
-    char* console_msg[100];
+    ConsoleMessage console_msg[100];
     int type_msg;
     int n_msg;
 };
@@ -79,51 +106,65 @@ extern Settings settings;
 void InitSettings();
 
 /**
- * @brief 
- * 
- */
-void GetTablesFromDB();
-
-
-/**
- * @brief function to connect to a database
- * 
- * @param db_path path of the file where the db is
- * @param db variable sqlite that holds the db in the program   
- * @param result_code error code resulting of making the query
- * @return int 
+ * @brief Connects to an SQLite database.
+ *
+ * This function establishes a connection to an SQLite database located at the 
+ * specified path.
+ *
+ * @param db_path The path to the SQLite database to connect to.
+ * @param db A pointer to an SQLite database handle.
+ * @param result_code A pointer to store the result code of the connection attempt.
+ * @return Returns 0 if the connection is successful, 1 on failure.
  */
 int ConnectToDB(char *db_path, sqlite3 **db, int *result_code);
 
-
+/**
+ * @brief Adds an error message to a collection of messages.
+ *
+ * This function is used to add an error message to a collection of messages.
+ * It allocates memory for the error message and appends it to the existing messages.
+ *
+ * @param err_msg The error message to add to the collection.
+ */
 
 void AddErrorMsg(char *err_msg);
 
 /**
- * @brief function that makes a query in the db selected using the callback given
- * 
- * @param query string cotaining the query itself
- * @param db database on wich we will make the query
- * @param callback function to execute the query 
- * @return int 
+ * @brief Executes an SQL query on an SQLite database.
+ *
+ * This function executes the specified SQL query on the provided SQLite database
+ * and invokes a callback function for result processing. It also handles any potential
+ * error messages and stores them in the collection of messages.
+ *
+ * @param query The SQL query to execute.
+ * @param db A pointer to the SQLite database.
+ * @param callback A callback function for processing query results.
+ * @return Returns the result code of the query execution.
  */
 int RunQuery(char *query, sqlite3 *db, int callback(void *, int, char **, char **));
 
 /**
- * @brief Callback function to stablish the program settings from a database
- * 
- * @param not_used 
- * @param argc 
- * @param argv 
- * @param azcolname 
- * @return int 
+ * @brief Sets application settings based on database query results.
+ *
+ * This function is used to set application settings based on data retrieved from a
+ * database query. It parses the query results and updates the settings accordingly.
+ *
+ * @param not_used An unused pointer (can be NULL).
+ * @param argc The number of columns in the query result.
+ * @param argv An array of strings containing the query result data.
+ * @param azcolname An array of strings containing column names (not used here).
+ * @return Returns 0 to indicate a successful update of settings.
  */
 int SetSettings(void *not_used, int argc, char **argv, char **azcolname);
 
 /**
- * @brief Procedure to get the names of the databases that we can select
- * 
- * @param db_path file path where the databases are
+ * @brief Collects names of database files in a specified directory.
+ *
+ * This function scans a directory for database files with the ".db" extension and collects
+ * their names, storing them in the `settings.db_names` array. The total count of collected
+ * database names is stored in `settings.db_database_counter`.
+ *
+ * @param db_path The path to the directory containing the database files.
  */
 void DataBaseNames(char *db_path);
 

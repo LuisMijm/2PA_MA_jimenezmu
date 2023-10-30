@@ -45,7 +45,6 @@ int GetDataFromDB(void *not_used, int argc, char **argv, char **azcolname)
     not_used = 0;
     if (argc > 0 && argc <= 64)
     {
-        // printf("Rows: %d \n", settings.db_Rows);
         if (settings.db_Rows == 0)
         {
             settings.db_Cols = argc;
@@ -77,7 +76,6 @@ int GetDataFromDB(void *not_used, int argc, char **argv, char **azcolname)
             }
             else
             {
-                // sscanf("NULL", "%s", settings.db_table_info[settings.db_Rows - 1][i]);
                 settings.db_table_info[settings.db_Rows - 1][i] = (char *)calloc(kStringSize, sizeof(char));
                 strcpy(settings.db_table_info[settings.db_Rows - 1][i], "NULL");
             }
@@ -88,6 +86,71 @@ int GetDataFromDB(void *not_used, int argc, char **argv, char **azcolname)
     }
 
     return 0;
+}
+
+// void InsertDataLine(int cols)
+// {
+//     char* insertString = (char*)calloc(cols * kStringSize, sizeof(char));
+
+//     strcpy(insertString, "INSERT INTO (");
+
+//     for (int i = 0; i < cols; i++)
+//     {
+//         // strcpy(insertString, settings.db_ColNames[i]);
+//         if (i < cols - 1)
+//             strcpy(insertString, ", ");
+//     }
+//     strcpy(insertString, ")\n");
+//     strcpy(insertString, "VALUES (");
+
+//     for (int i = 0; i < cols; i++)
+//     {
+//         strcpy(insertString, "\'");
+//         // strcpy(insertString, settings.db_table_info[row][i]);
+//         if (i < cols - 1)
+//             strcpy(insertString, "\', ");
+//     }
+//     strcpy(insertString, ")\n");
+
+//     RunQuery(insertString, settings.db_current, GetDataFromDB);
+
+//     free(insertString);
+// }
+
+void UpdateData(int row, int cols)
+{
+    char* updateString = (char*)calloc((cols * kStringSize) + kStringSize, sizeof(char));
+
+    strcat(updateString, "UPDATE ");
+    strcat(updateString, settings.db_table_names[settings.current_table]);
+    strcat(updateString, " SET");
+
+    for (int i = 0; i < cols; i++)
+    {
+        strcat(updateString, settings.db_ColNames[i]);
+        strcat(updateString, " = ");
+
+        if (settings.db_table_info[row][i] != NULL)
+        {
+            strcat(updateString, settings.db_table_info[row][i]);
+        }else
+        {
+            strcat(updateString, "NULL");
+        }
+        
+        strcat(updateString, "\'");
+
+        if (i < cols - 1)
+        {
+            strcat(updateString, "\' ");   
+        }
+    }
+    strcat(updateString, "WHERE ");
+    // strcat(updateString, "");
+
+    // RunQuery(updateString, settings.db_current, GetDataFromDB);
+
+    free(updateString);
 }
 
 

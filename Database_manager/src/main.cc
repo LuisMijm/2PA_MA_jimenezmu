@@ -1,5 +1,3 @@
-
-
 #include "include.h"
 
 int esat::main(int argc, char **argv)
@@ -20,10 +18,9 @@ int esat::main(int argc, char **argv)
         settings.fps_last_time = esat::Time();
         esat::DrawBegin();
         esat::DrawClear(0, 0, 0);
-        printf("Rows: %d \n", settings.db_Rows);
-        printf("Cols: %d \n", settings.db_Cols);
+
         AllWindow();
-        ImGui::ShowDemoWindow();   
+        // ImGui::ShowDemoWindow();   
 
         do
         {

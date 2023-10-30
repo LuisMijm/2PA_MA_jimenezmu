@@ -12,19 +12,28 @@
 #include <database.h>    
 #include <ImGuiWindow.h>
 
+
+ImVec2 Vec2toImVec2(Vec2 vector){
+    ImVec2 im_vector;
+    im_vector.x = vector.x;
+    im_vector.y = vector.y;
+    return im_vector;
+}
+
+
 void ConsoleMessage(int type, int i)
 {
-    if (settings.console_msg[i] != NULL)
+    if (settings.console_msg[i].string != NULL)
     {
         switch (type)
         {
         //error messages type (red)
         case 0:
-            ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), settings.console_msg[i]);
+            ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), settings.console_msg[i].string);
             break;
         //console message type (white)
         case 1:
-            ImGui::Text(settings.console_msg[i]);
+            ImGui::Text(settings.console_msg[i].string);
             break;
 
         default:
@@ -40,8 +49,8 @@ void ConsoleMessage(int type, int i)
 void DataBaseSelectedWindow()
 {    
 
-    ImGui::SetNextWindowSize(ImVec2(200, 110));
-    ImGui::SetNextWindowPos(ImVec2(20, 20));
+    ImGui::SetNextWindowSize(ImVec2(Vec2toImVec2(settings.windowSettings[0].size)));
+    ImGui::SetNextWindowPos(ImVec2(Vec2toImVec2(settings.windowSettings[0].position)));
     ImGui::Begin("Select DataBase:", nullptr ,
                     ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
                     | ImGuiWindowFlags_NoCollapse);
@@ -69,11 +78,11 @@ void DataBaseSelectedWindow()
 
         /* printf("Connected to database %s\n", settings.db_names[settings.current_database]); */
         // For show console message
-        settings.type_msg = 1;
+        settings.console_msg[settings.n_msg].type = 1;
         int msg_size = strlen("Connected to database ") + strlen(settings.db_names[settings.current_database]);
-        settings.console_msg[settings.n_msg] = (char *)calloc(msg_size, sizeof(char));
-        strcat(settings.console_msg[settings.n_msg], "\nConnected to database ");
-        strcat(settings.console_msg[settings.n_msg], settings.db_names[settings.current_database]);
+        settings.console_msg[settings.n_msg].string = (char *)calloc(msg_size, sizeof(char));
+        strcat(settings.console_msg[settings.n_msg].string, "\nConnected to database ");
+        strcat(settings.console_msg[settings.n_msg].string, settings.db_names[settings.current_database]);
         settings.n_msg++;
 
     }
@@ -90,21 +99,21 @@ void DataBaseSelectedWindow()
         /* printf("Disconected from database %s\n", settings.db_names[settings.current_database]); */
 
         //For show console message
-        settings.type_msg = 1;
+        settings.console_msg[settings.n_msg].type = 1;
         int msg_size = strlen("Disconected from database ") + strlen(settings.db_names[settings.current_database]);
-        settings.console_msg[settings.n_msg] = (char *)calloc(msg_size, sizeof(char));
-        strcat(settings.console_msg[settings.n_msg], "\nDisconected from database ");
-        strcat(settings.console_msg[settings.n_msg], settings.db_names[settings.current_database]);
+        settings.console_msg[settings.n_msg].string = (char *)calloc(msg_size, sizeof(char));
+        strcat(settings.console_msg[settings.n_msg].string, "\nDisconected from database ");
+        strcat(settings.console_msg[settings.n_msg].string, settings.db_names[settings.current_database]);
         settings.n_msg++;
     }
 
     ImGui::End();
 }
 
-void TableSelectedWindow(int selected_database/* , char *current_database_name */)
+void TableSelectedWindow(int selected_database)
 {
-    ImGui::SetNextWindowSize(ImVec2(200, 110));
-    ImGui::SetNextWindowPos(ImVec2(20, 150));
+    ImGui::SetNextWindowSize(ImVec2(Vec2toImVec2(settings.windowSettings[1].size)));
+    ImGui::SetNextWindowPos(ImVec2(Vec2toImVec2(settings.windowSettings[1].position)));
     ImGui::Begin("Select Table:", nullptr ,
                     ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
                     | ImGuiWindowFlags_NoCollapse);
@@ -138,8 +147,8 @@ void CurrentTableWindow(int selected_table, int database_selected,
                         char current_table_name[], int n_db_rows = 0, 
                         int n_db_cols = 0)
 {
-    ImGui::SetNextWindowSize(ImVec2(540, 240));
-    ImGui::SetNextWindowPos(ImVec2(240, 20));
+    ImGui::SetNextWindowSize(ImVec2(Vec2toImVec2(settings.windowSettings[2].size)));
+    ImGui::SetNextWindowPos(ImVec2(Vec2toImVec2(settings.windowSettings[2].position)));
     ImGui::Begin(current_table_name, nullptr , 
                     ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
                     | ImGuiWindowFlags_NoCollapse );
@@ -151,17 +160,14 @@ void CurrentTableWindow(int selected_table, int database_selected,
                             ImGuiTableFlags_BordersOuter | 
                             ImGuiTableFlags_BordersV))
     {
-        // Freeze the first column
-        ImGui::TableSetupScrollFreeze(1, 1);
+        // ImGui::TableSetupScrollFreeze(1, 1);
 
         for (int i = 0; i < settings.db_Cols; i++)
         {
             ImGui::TableSetupColumn(settings.db_ColNames[i], ImGuiTableColumnFlags_None);
         }
-        
-        // Define column headers
        
-
+       
         // End the header row
         ImGui::TableHeadersRow();
 
@@ -194,17 +200,18 @@ void CurrentTableWindow(int selected_table, int database_selected,
 
 void ConsoleWindow()
 {
-    ImGui::SetNextWindowSize(ImVec2(540, 150));
-    ImGui::SetNextWindowPos(ImVec2(240, 280));
+    ImGui::SetNextWindowSize(ImVec2(Vec2toImVec2(settings.windowSettings[3].size)));
+    ImGui::SetNextWindowPos(ImVec2(Vec2toImVec2(settings.windowSettings[3].position)));
     ImGui::Begin("Console", nullptr , 
                     ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
                     | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar |
                     ImGuiWindowFlags_NoScrollbar);
     
-    if (ImGui::BeginChild("Subventana", ImVec2(520, 110), true))
+    if (ImGui::BeginChild("Subventana", ImVec2(1100, 135), true))
     {
-        for(int i = settings.n_msg; i > 0; i--){
-            ConsoleMessage(settings.type_msg, i);
+        for(int i = settings.n_msg; i >= 0; i--){
+
+            ConsoleMessage(settings.console_msg[i].type, i);
             
         }
         ImGui::EndChild();
@@ -212,10 +219,8 @@ void ConsoleWindow()
 
     if (ImGui::Button("Clear"))
     {
-        //solucionar liberar de memoria
         for(int i = 0; i < settings.n_msg; i++){
-            /* free(settings.console_msg[i]); */
-            settings.console_msg[i] = nullptr;
+            settings.console_msg[i].string = nullptr;
         }
         settings.n_msg = 0;   
     }
@@ -224,20 +229,19 @@ void ConsoleWindow()
 
 void QuerieWindow()
 {
-    ImGui::SetNextWindowSize(ImVec2(200, 150));
-    ImGui::SetNextWindowPos(ImVec2(20, 280));
+    ImGui::SetNextWindowSize(ImVec2(Vec2toImVec2(settings.windowSettings[4].size)));
+    ImGui::SetNextWindowPos(ImVec2(Vec2toImVec2(settings.windowSettings[4].position)));
     ImGui::Begin("Queries:", nullptr , 
                     ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
                     | ImGuiWindowFlags_NoCollapse);
     ImGui::InputTextMultiline("##source", settings.querie_text, IM_ARRAYSIZE(settings.querie_text),
-                              ImVec2(-1.0f, ImGui::GetTextLineHeight() * 7),
+                              ImVec2(-1.0f, ImGui::GetTextLineHeight() * 8.5),
                               ImGuiInputTextFlags_AllowTabInput);
     if(ImGui::Button("Submit"))
     {
-        // FreeTable(settings.db_Cols, settings.db_Rows);
-        // settings.db_Cols = settings.db_Rows = 0;
+
         ResetTable();
-        // settings.db_table_count = 0;
+
         settings.db_result_code = RunQuery(settings.querie_text, settings.db_current, GetDataFromDB);
         if (0 == settings.db_result_code)
         {
@@ -250,7 +254,7 @@ void QuerieWindow()
         }
         if (settings.db_Cols <= 0 || settings.db_Cols > 64)
         {
-            AddErrorMsg("Unable to acces table: Only 1-64 columns allowed");
+            // AddErrorMsg("Unable to acces table: Only 1-64 columns allowed");
         }
         
     }
@@ -266,11 +270,13 @@ void QuerieWindow()
 
 void AllWindow(){
     DataBaseSelectedWindow();
-    TableSelectedWindow(settings.current_database/* , "DataBase" */);
+    TableSelectedWindow(settings.current_database);
     if(settings.db_connected){
         if (settings.db_Cols > 0 && settings.db_Cols <= 64)
         {
             CurrentTableWindow(0, 0, settings.db_table_names[settings.current_table], settings.db_Rows, settings.db_Cols);
+        }else{
+            // AddErrorMsg("Asertion failed: columns_count > 0 && coulumns_count <= 64 && Only 1..64 \"columns allowed!\"");
         }
     }
     ConsoleWindow();
