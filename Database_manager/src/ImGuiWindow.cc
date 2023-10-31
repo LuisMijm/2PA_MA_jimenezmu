@@ -93,20 +93,20 @@ void DataBaseSelectedWindow()
 
         /* printf("Connected to database %s\n", settings.db_names[settings.current_database]); */
         // For show console message
-       /*  time_t current_hour;
+        time_t current_hour;
         time(&current_hour);
 
         struct tm *infHour;
         infHour = localtime(&current_hour);
         char buffer_time[80];
-        strftime(buffer_time, 80, "[%H:%M:%S]", infHour); */
+        strftime(buffer_time, 80, "[%H:%M:%S]", infHour);
 
         settings.console_msg[settings.n_msg].type = 1;
-        int msg_size = strlen("Connected to database ") + strlen(settings.db_names[settings.current_database]/*  + strlen(buffer_time) */);
+        int msg_size = strlen("Connected to database ") + strlen(settings.db_names[settings.current_database]) + strlen(buffer_time);
         settings.console_msg[settings.n_msg].string = (char *)calloc(msg_size, sizeof(char));
 
         strcat(settings.console_msg[settings.n_msg].string, "\n");
-       /*  strcat(settings.console_msg[settings.n_msg].string, buffer_time); */
+        strcat(settings.console_msg[settings.n_msg].string, buffer_time);
         strcat(settings.console_msg[settings.n_msg].string, "Connected to database ");
         strcat(settings.console_msg[settings.n_msg].string, settings.db_names[settings.current_database]);
         settings.n_msg++;
@@ -125,25 +125,25 @@ void DataBaseSelectedWindow()
         /* printf("Disconected from database %s\n", settings.db_names[settings.current_database]); */
 
         //For show console message
-       /*  time_t current_hour;
+        time_t current_hour;
         time(&current_hour);
 
         struct tm *infHour;
         infHour = localtime(&current_hour);
         char buffer_time[80];
         strftime(buffer_time, 80, "[%H:%M:%S]", infHour);
- */
+
         settings.console_msg[settings.n_msg].type = 1;
-        int msg_size = strlen("Disconected from database ") + strlen(settings.db_names[settings.current_database]/*  + strlen(buffer_time) */);
+        int msg_size = strlen("Disconected from database ") + strlen(settings.db_names[settings.current_database])  + strlen(buffer_time);
         settings.console_msg[settings.n_msg].string = (char *)calloc(msg_size, sizeof(char));
 
         strcat(settings.console_msg[settings.n_msg].string, "\n");
-        /* strcat(settings.console_msg[settings.n_msg].string, buffer_time); */
+        strcat(settings.console_msg[settings.n_msg].string, buffer_time);
         strcat(settings.console_msg[settings.n_msg].string, "Disconected from database ");
         strcat(settings.console_msg[settings.n_msg].string, settings.db_names[settings.current_database]);
         settings.n_msg++;
     }
-    /* for(int i = 0; i < 15; i++){
+    for(int i = 0; i < 15; i++){
         ImGui::Spacing();
     }
     time_t current_hour;
@@ -153,7 +153,7 @@ void DataBaseSelectedWindow()
     infHour = localtime(&current_hour);
     char buffer[80];
     strftime(buffer, 80, "%Y-%m-%d [%H:%M:%S]", infHour);
-    ImGui::Text(buffer); */
+    ImGui::Text(buffer);
 
     ImGui::End();
 }
@@ -184,20 +184,20 @@ void TableSelectedWindow(int selected_database)
         settings.db_result_code = RunQuery(db_table_query, settings.db_current, GetDataFromDB);
         settings.db_connected = true;
 
-        /* time_t current_hour;
+        time_t current_hour;
         time(&current_hour);
 
         struct tm *infHour;
         infHour = localtime(&current_hour);
         char buffer_time[80];
-        strftime(buffer_time, 80, "[%H:%M:%S]", infHour); */
+        strftime(buffer_time, 80, "[%H:%M:%S]", infHour);
 
         settings.console_msg[settings.n_msg].type = 1;
-        int msg_size = strlen("Showing table ") + strlen(settings.db_table_names[settings.current_table] /* + strlen(buffer_time) */);
+        int msg_size = strlen("Showing table ") + strlen(settings.db_table_names[settings.current_table]) + strlen(buffer_time);
         settings.console_msg[settings.n_msg].string = (char *)calloc(msg_size, sizeof(char));
 
         strcat(settings.console_msg[settings.n_msg].string, "\n");
-        /* strcat(settings.console_msg[settings.n_msg].string, buffer_time); */
+        strcat(settings.console_msg[settings.n_msg].string, buffer_time);
         strcat(settings.console_msg[settings.n_msg].string, "Showing table ");
         strcat(settings.console_msg[settings.n_msg].string, settings.db_table_names[settings.current_table]);
         
@@ -315,7 +315,7 @@ void QuerieWindow()
         {
             settings.db_connected = true;
 
-            /* time_t current_hour;
+            time_t current_hour;
             time(&current_hour);
 
             struct tm *infHour;
@@ -324,7 +324,7 @@ void QuerieWindow()
             strftime(buffer_time, 80, "[%H:%M:%S]", infHour);
 
             settings.console_msg[settings.n_msg].type = 2;
-            int msg_size = strlen("Query: ") + strlen(settings.querie_text + strlen(buffer_time));
+            int msg_size = strlen("Query: ") + strlen(settings.querie_text) + strlen(buffer_time);
             settings.console_msg[settings.n_msg].string = (char *)calloc(msg_size, sizeof(char));
 
             strcat(settings.console_msg[settings.n_msg].string, "\n");
@@ -332,7 +332,7 @@ void QuerieWindow()
             strcat(settings.console_msg[settings.n_msg].string, "Query: ");
             strcat(settings.console_msg[settings.n_msg].string, settings.querie_text);
 
-            settings.n_msg++; */
+            settings.n_msg++;
         }
         else
         {
@@ -343,10 +343,10 @@ void QuerieWindow()
         {
             // AddErrorMsg("Unable to access table: Only 1-64 columns allowed");
         }
-        /* if (settings.querie_text[0] == '\0')
+        if (settings.querie_text[0] == '\0')
         {
             AddErrorMsg("Empty query");
-        } */
+        }
     }
     ImGui::SameLine();
 

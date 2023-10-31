@@ -101,16 +101,16 @@ int ConnectToDB(char* db_path, sqlite3** db, int* result_code)
 void AddErrorMsg(char *err_msg)
 {
 
-    /*time_t current_hour;
+    time_t current_hour;
     time(&current_hour);
 
     struct tm *infHour;
     infHour = localtime(&current_hour);
     char buffer_time[80];
-    strftime(buffer_time, 80, "[%H:%M:%S]", infHour); */
+    strftime(buffer_time, 80, "[%H:%M:%S]", infHour);
 
     int string_size = 0;
-    int err_size = strlen(err_msg)/*  + strlen(buffer_time) */;
+    int err_size = strlen(err_msg) + strlen(buffer_time);
 
     if(NULL == settings.console_msg[settings.n_msg].string )
     {
@@ -131,7 +131,7 @@ void AddErrorMsg(char *err_msg)
 
     settings.console_msg[settings.n_msg].type= 0;
     strcat(settings.console_msg[settings.n_msg].string , "\n");
-    /* strcat(settings.console_msg[settings.n_msg].string, buffer_time); */
+    strcat(settings.console_msg[settings.n_msg].string, buffer_time);
 
     strcat(settings.console_msg[settings.n_msg].string , err_msg);
     settings.n_msg++;
