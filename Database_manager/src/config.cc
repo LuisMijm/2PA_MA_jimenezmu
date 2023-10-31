@@ -28,7 +28,8 @@ enum WindowSetting
     kWindowSetting_TableSelected,
     kWindowSetting_TableWindow,
     kWindowSetting_ConsoleWindow,
-    kWindowSetting_QueryWindow
+    kWindowSetting_QueryWindow,
+    kWindowSetting_SettingsWindow
 };
 
 
@@ -66,7 +67,7 @@ void InitSettings()
 
     settings.db_connected = false;
 
-    
+    settings.visual_connected = false;
 
     settings.querie_text[0] = '\0';
     settings.db_database_counter = 0;
@@ -240,7 +241,6 @@ int SetSettings(void* not_used, int argc, char** argv, char** azcolname)
     {
         sscanf(argv[2], "%f", &settings.windowSettings[kWindowSetting_ConsoleWindow].position.y);
     }
-
     else if(!strcmp(argv[1], "window_query_size_x"))
     {
         sscanf(argv[2], "%f", &settings.windowSettings[kWindowSetting_QueryWindow].size.x);
@@ -258,6 +258,23 @@ int SetSettings(void* not_used, int argc, char** argv, char** azcolname)
         sscanf(argv[2], "%f", &settings.windowSettings[kWindowSetting_QueryWindow].position.y);
     }
 
+
+    else if(!strcmp(argv[1], "window_settings_size_x"))
+    {
+        sscanf(argv[2], "%f", &settings.windowSettings[kWindowSetting_SettingsWindow].size.x);
+    }
+    else if (!strcmp(argv[1], "window_settings_size_y"))
+    {
+        sscanf(argv[2], "%f", &settings.windowSettings[kWindowSetting_SettingsWindow].size.y);
+    }
+    else if (!strcmp(argv[1], "window_settings_pos_x"))
+    {
+        sscanf(argv[2], "%f", &settings.windowSettings[kWindowSetting_SettingsWindow].position.x);
+    }
+    else if (!strcmp(argv[1], "window_settings_pos_y"))
+    {
+        sscanf(argv[2], "%f", &settings.windowSettings[kWindowSetting_SettingsWindow].position.y);
+    }
     // else if(!strcmp(argv[1], ""))
     // {
     //     sscanf(argv[2], "%", &settings.);

@@ -72,6 +72,7 @@ struct Settings{
     int db_database_counter;
     int db_table_count;
     bool db_connected;
+    bool visual_connected;
     sqlite3 *db_current;
     char** db_names;
     char** db_table_names;
@@ -87,7 +88,7 @@ struct Settings{
 
 
     // ImGui windows settings
-    WindowSettings windowSettings[5];
+    WindowSettings windowSettings[6];
 
     // Input text Window Querie
     char querie_text[512];

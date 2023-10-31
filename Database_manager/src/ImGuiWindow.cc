@@ -115,6 +115,7 @@ void DataBaseSelectedWindow()
         strcat(settings.console_msg[settings.n_msg].string, "Connected to database ");
         strcat(settings.console_msg[settings.n_msg].string, settings.db_names[settings.current_database]);
         settings.n_msg++;
+        settings.visual_connected = true;
 
     }
     ImGui::SameLine();
@@ -147,10 +148,10 @@ void DataBaseSelectedWindow()
         strcat(settings.console_msg[settings.n_msg].string, "Disconected from database ");
         strcat(settings.console_msg[settings.n_msg].string, settings.db_names[settings.current_database]);
         settings.n_msg++;
+        settings.visual_connected = false;
+
     }
-    for(int i = 0; i < 15; i++){
-        ImGui::Spacing();
-    }
+    
     
 
     ImGui::End();
@@ -191,7 +192,7 @@ void TableSelectedWindow(int selected_database)
         strftime(buffer_time, 80, "[%H:%M:%S]", infHour);
 
         settings.console_msg[settings.n_msg].type = 1;
-        int msg_size = strlen("Showing table ") + strlen(settings.db_table_names[settings.current_table]) + strlen(buffer_time);
+        int msg_size = strlen("\nShowing table ") + strlen(settings.db_table_names[settings.current_table]) + strlen(buffer_time);
         settings.console_msg[settings.n_msg].string = (char *)calloc(msg_size, sizeof(char));
 
         strcat(settings.console_msg[settings.n_msg].string, "\n");
@@ -282,7 +283,7 @@ void ConsoleWindow()
                     | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar |
                     ImGuiWindowFlags_NoScrollbar);
     
-    if (ImGui::BeginChild("Subventana", ImVec2(1100, 135), true))
+    if (ImGui::BeginChild("Subventana", ImVec2(1100, 130), true))
     {
         for(int i = settings.n_msg; i >= 0; i--){
 
@@ -304,8 +305,8 @@ void ConsoleWindow()
 
 void SettingsWindow()
 {
-    ImGui::SetNextWindowSize(ImVec2(380.0f, 60.0f));
-    ImGui::SetNextWindowPos(ImVec2(20.0f, 20.0f));
+    ImGui::SetNextWindowSize(ImVec2(Vec2toImVec2(settings.windowSettings[5].size)));
+    ImGui::SetNextWindowPos(ImVec2(Vec2toImVec2(settings.windowSettings[5].position)));
     ImGui::Begin("Settings", nullptr,
                  ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar |
                      ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_MenuBar);
@@ -319,6 +320,19 @@ void SettingsWindow()
                 ImGui::Text("%dx%d", settings.screen_window_width, settings.screen_window_height);
                 ImGui::EndMenu();
             }
+            if(ImGui::BeginMenu("Fps")){
+                ImGui::Text("%d", settings.fps_fps);
+                ImGui::EndMenu();
+            }
+            if(ImGui::BeginMenu("Number Data Bases")){
+                ImGui::Text("%d", settings.db_database_counter);
+                ImGui::EndMenu();
+            }
+            if(ImGui::BeginMenu("Number of table")){
+                ImGui::Text("%d", settings.db_table_count);
+                ImGui::EndMenu();
+            }
+            
             ImGui::EndMenu();
         } 
         ImGui::Text("|");
@@ -348,6 +362,83 @@ void SettingsWindow()
 
         if (ImGui::BeginMenu("Testing"))
         {
+            if(ImGui::Button("RED"))
+            {
+                time_t current_hour;
+                time(&current_hour);
+
+                struct tm *infHour;
+                infHour = localtime(&current_hour);
+                char buffer_time[80];
+                strftime(buffer_time, 80, "[%H:%M:%S]", infHour);
+
+                settings.console_msg[settings.n_msg].type = 0;
+                int msg_size = strlen("\nRed Test ") + strlen(buffer_time);
+                settings.console_msg[settings.n_msg].string = (char *)calloc(msg_size, sizeof(char));
+
+                strcat(settings.console_msg[settings.n_msg].string, "\n");
+                strcat(settings.console_msg[settings.n_msg].string, buffer_time);
+                strcat(settings.console_msg[settings.n_msg].string, "Red Test ");
+                settings.n_msg++;
+                
+            }
+            if(ImGui::Button("GREEN"))
+            {
+                time_t current_hour;
+                time(&current_hour);
+
+                struct tm *infHour;
+                infHour = localtime(&current_hour);
+                char buffer_time[80];
+                strftime(buffer_time, 80, "[%H:%M:%S]", infHour);
+
+                settings.console_msg[settings.n_msg].type = 2;
+                int msg_size = strlen("\nGreen Test ") + strlen(buffer_time);
+                settings.console_msg[settings.n_msg].string = (char *)calloc(msg_size, sizeof(char));
+
+                strcat(settings.console_msg[settings.n_msg].string, "\n");
+                strcat(settings.console_msg[settings.n_msg].string, buffer_time);
+                strcat(settings.console_msg[settings.n_msg].string, "Green Test ");
+                settings.n_msg++;
+            }
+            if(ImGui::Button("WHITE"))
+            {
+                time_t current_hour;
+                time(&current_hour);
+
+                struct tm *infHour;
+                infHour = localtime(&current_hour);
+                char buffer_time[80];
+                strftime(buffer_time, 80, "[%H:%M:%S]", infHour);
+
+                settings.console_msg[settings.n_msg].type = 1;
+                int msg_size = strlen("\nWhite Test ") + strlen(buffer_time);
+                settings.console_msg[settings.n_msg].string = (char *)calloc(msg_size, sizeof(char));
+
+                strcat(settings.console_msg[settings.n_msg].string, "\n");
+                strcat(settings.console_msg[settings.n_msg].string, buffer_time);
+                strcat(settings.console_msg[settings.n_msg].string, "White Test ");
+                settings.n_msg++;
+            }
+            if(ImGui::Button("RANDOM"))
+            {
+                time_t current_hour;
+                time(&current_hour);
+
+                struct tm *infHour;
+                infHour = localtime(&current_hour);
+                char buffer_time[80];
+                strftime(buffer_time, 80, "[%H:%M:%S]", infHour);
+
+                settings.console_msg[settings.n_msg].type = 3;
+                int msg_size = strlen("\nRandom Test ") + strlen(buffer_time);
+                settings.console_msg[settings.n_msg].string = (char *)calloc(msg_size, sizeof(char));
+
+                strcat(settings.console_msg[settings.n_msg].string, "\n");
+                strcat(settings.console_msg[settings.n_msg].string, buffer_time);
+                strcat(settings.console_msg[settings.n_msg].string, "Random Test ");
+                settings.n_msg++;
+            }
             ImGui::EndMenu();
         }
         ImGui::EndMenuBar();
@@ -364,6 +455,12 @@ void SettingsWindow()
     ImGui::Text(buffer);
     ImGui::SameLine();
     ImGui::Text("V-1.1.3");
+    ImGui::SameLine();
+    if(settings.visual_connected == true){
+            ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Connected");
+    }else if(settings.visual_connected == false){
+            ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Disconnected");
+    }
 
 
     ImGui::End();
