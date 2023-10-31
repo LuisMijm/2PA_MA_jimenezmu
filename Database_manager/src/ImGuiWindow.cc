@@ -302,7 +302,7 @@ void QuerieWindow()
                     ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
                     | ImGuiWindowFlags_NoCollapse);
     ImGui::InputTextMultiline("##source", settings.querie_text, IM_ARRAYSIZE(settings.querie_text),
-                              ImVec2(-1.0f, ImGui::GetTextLineHeight() * 8.5),
+                              ImVec2(-1.0f, ImGui::GetTextLineHeight() * 8),
                               ImGuiInputTextFlags_AllowTabInput);
     if(ImGui::Button("Submit"))
     {
@@ -310,7 +310,7 @@ void QuerieWindow()
         ResetTable();
 
         settings.db_result_code = RunQuery(settings.querie_text, settings.db_current, GetDataFromDB);
-        if (0 == settings.db_result_code)
+        if (0 == settings.db_result_code && settings.querie_text[0] != '\0')
         {
             settings.db_connected = true;
 
@@ -323,14 +323,14 @@ void QuerieWindow()
             strftime(buffer_time, 80, "[%H:%M:%S]", infHour);
 
             settings.console_msg[settings.n_msg].type = 2;
-            int msg_size = strlen("Query[] ") + strlen(settings.querie_text + strlen(buffer_time));
+            int msg_size = strlen("Query: ") + strlen(settings.querie_text + strlen(buffer_time));
             settings.console_msg[settings.n_msg].string = (char *)calloc(msg_size, sizeof(char));
 
             strcat(settings.console_msg[settings.n_msg].string, "\n");
             strcat(settings.console_msg[settings.n_msg].string, buffer_time);
-            strcat(settings.console_msg[settings.n_msg].string, "Query [");
+            strcat(settings.console_msg[settings.n_msg].string, "Query: ");
             strcat(settings.console_msg[settings.n_msg].string, settings.querie_text);
-            strcat(settings.console_msg[settings.n_msg].string, "]");
+        
 
             settings.n_msg++;
 
@@ -341,9 +341,11 @@ void QuerieWindow()
         }
         if (settings.db_Cols <= 0 || settings.db_Cols > 64)
         {
-            // AddErrorMsg("Unable to acces table: Only 1-64 columns allowed");
+            // AddErrorMsg("Unable to access table: Only 1-64 columns allowed");
         }
-        
+        if (settings.querie_text[0] == '\0'){
+            AddErrorMsg("Empty query");
+        }
     }
     ImGui::SameLine();
 
