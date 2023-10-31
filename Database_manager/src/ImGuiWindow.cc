@@ -33,6 +33,9 @@ void ConsoleMessage(int type, int i)
 
     if (settings.console_msg[i].string != NULL)
     {
+            float r = (float)(rand() % 100)/100;
+            float g = (float)(rand() % 100) / 100;
+            float b = (float)(rand() % 100) / 100;
         switch (type)
         {
         //error messages type (red)
@@ -50,7 +53,9 @@ void ConsoleMessage(int type, int i)
             
             ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), settings.console_msg[i].string);
             break;
-
+        case 3:
+            ImGui::TextColored(ImVec4(r, g, b, 1.0f), settings.console_msg[i].string);
+            break;
         default:
             break;
         }
@@ -146,14 +151,7 @@ void DataBaseSelectedWindow()
     for(int i = 0; i < 15; i++){
         ImGui::Spacing();
     }
-    time_t current_hour;
-    time(&current_hour);
-
-    struct tm *infHour;
-    infHour = localtime(&current_hour);
-    char buffer[80];
-    strftime(buffer, 80, "%Y-%m-%d [%H:%M:%S]", infHour);
-    ImGui::Text(buffer);
+    
 
     ImGui::End();
 }
@@ -220,7 +218,7 @@ void CurrentTableWindow(int selected_table, int database_selected,
                     ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
                     | ImGuiWindowFlags_NoCollapse );
 
-    if (ImGui::BeginTable("HorizontalTable", settings.db_Cols, 
+    if (ImGui::BeginTable("HorizontalTable", settings.db_Cols + 1, 
                             ImGuiTableFlags_ScrollX | 
                             ImGuiTableFlags_ScrollY | 
                             ImGuiTableFlags_RowBg | 
@@ -228,6 +226,7 @@ void CurrentTableWindow(int selected_table, int database_selected,
                             ImGuiTableFlags_BordersV))
     {
         // ImGui::TableSetupScrollFreeze(1, 1);
+        const int max_size_value = 1024;
 
         for (int i = 0; i < settings.db_Cols; i++)
         {
@@ -245,8 +244,12 @@ void CurrentTableWindow(int selected_table, int database_selected,
             for (int col = 0; col < settings.db_Cols; col++)
             {
                 ImGui::TableSetColumnIndex(col);
-                ImGui::Text(settings.db_table_info[row][col]);
-                
+                // ImGui::Text(settings.db_table_info[row][col]);
+                ImGui::PushID((100 * row) + col);
+                // ImGui::InputText("\0", settings.db_table_info[row][col], sizeof(settings.db_table_info[row][col]));
+                ImGui::InputText("\0", settings.db_table_info[row][col], max_size_value);
+
+                ImGui::PopID();
                 // switch ()
                 // {
                 // case /* constant-expression */:
@@ -256,6 +259,11 @@ void CurrentTableWindow(int selected_table, int database_selected,
                 // default:
                 //     break;
                 // }
+                ImGui::TableSetColumnIndex(settings.db_Cols);
+                if (ImGui::Button("Edit"))
+                {
+                    
+                }
             }
         }
 
@@ -291,6 +299,73 @@ void ConsoleWindow()
         }
         settings.n_msg = 0;   
     }
+    ImGui::End();
+}
+
+void SettingsWindow()
+{
+    ImGui::SetNextWindowSize(ImVec2(380.0f, 60.0f));
+    ImGui::SetNextWindowPos(ImVec2(20.0f, 20.0f));
+    ImGui::Begin("Settings", nullptr,
+                 ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar |
+                     ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_MenuBar);
+
+    if(ImGui::BeginMenuBar())
+    {
+        
+        if(ImGui::BeginMenu("Settings Info"))
+        {
+            if(ImGui::BeginMenu("Resolution")){
+                ImGui::Text("%dx%d", settings.screen_window_width, settings.screen_window_height);
+                ImGui::EndMenu();
+            }
+            ImGui::EndMenu();
+        } 
+        ImGui::Text("|");
+        if (ImGui::BeginMenu("Credits"))
+        {
+            ImGui::Text("Academic Project done in ESAT by:");
+            if (ImGui::BeginMenu("Carlos Mazcunan"))
+            {
+                ImGui::Text("mazcunyanbla@esat-alumni.com");
+                ImGui::EndMenu();
+            }
+            if (ImGui::BeginMenu("Luis Miguel Jimenez"))
+            {
+                ImGui::Text("jimenezmu@esat-alumi.com");
+                ImGui::EndMenu();
+            }
+            if (ImGui::BeginMenu("Lucas Calatayud"))
+            {
+                ImGui::Text("calatayudbri@esat-alumni.com");
+                ImGui::EndMenu();
+            }
+
+            ImGui::EndMenu();
+        }
+
+        ImGui::Text("|");
+
+        if (ImGui::BeginMenu("Testing"))
+        {
+            ImGui::EndMenu();
+        }
+        ImGui::EndMenuBar();
+    }
+    ImGui::Spacing();
+
+    time_t current_hour;
+    time(&current_hour);
+
+    struct tm *infHour;
+    infHour = localtime(&current_hour);
+    char buffer[80];
+    strftime(buffer, 80, "%Y-%m-%d [%H:%M:%S]", infHour);
+    ImGui::Text(buffer);
+    ImGui::SameLine();
+    ImGui::Text("V-1.1.3");
+
+
     ImGui::End();
 }
 
@@ -360,6 +435,7 @@ void QuerieWindow()
 
 void AllWindow(){
     DataBaseSelectedWindow();
+    SettingsWindow();
     TableSelectedWindow(settings.current_database);
     if(settings.db_connected){
         if (settings.db_Cols > 0 && settings.db_Cols <= 64)

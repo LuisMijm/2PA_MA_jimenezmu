@@ -76,7 +76,9 @@ struct Settings{
     char** db_names;
     char** db_table_names;
     char** db_ColNames;
+    char** db_ColTypes;
     char*** db_table_info;
+    char*** db_table_info_back;
     char* all_db_names;
 
     // selected database & table

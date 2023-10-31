@@ -40,6 +40,11 @@ int GetTablesFromDB(void *not_used, int argc, char **argv, char **azcolname)
 }
 
 
+// void Asses(char* data, char* type)
+// {
+//     strstr(type, );
+// }
+
 int GetDataFromDB(void *not_used, int argc, char **argv, char **azcolname)
 {
     not_used = 0;
@@ -49,12 +54,17 @@ int GetDataFromDB(void *not_used, int argc, char **argv, char **azcolname)
         {
             settings.db_Cols = argc;
             settings.db_ColNames = (char **)realloc(settings.db_ColNames, argc * sizeof(char *));
+            settings.db_ColTypes = (char **)realloc(settings.db_ColTypes, argc * sizeof(char *));
 
             for (int i = 0; i < argc; i++)
             {
                 settings.db_ColNames[i] = (char *)calloc(kStringSize, sizeof(char));
 
                 sscanf(azcolname[i], "%s", settings.db_ColNames[i]);
+
+                settings.db_ColTypes[i] = (char *)calloc(kStringSize, sizeof(char));
+
+                // sscanf();
             }
         }
 
@@ -62,6 +72,7 @@ int GetDataFromDB(void *not_used, int argc, char **argv, char **azcolname)
 
         // Row memory reserve
         settings.db_table_info = (char ***)realloc(settings.db_table_info, settings.db_Rows * sizeof(char **));
+        settings.db_table_info_back = (char ***)realloc(settings.db_table_info_back, settings.db_Rows * sizeof(char **));
 
         // Col memory reserve
         settings.db_table_info[settings.db_Rows - 1] = (char **)calloc(argc, sizeof(char *));
@@ -73,11 +84,17 @@ int GetDataFromDB(void *not_used, int argc, char **argv, char **azcolname)
             {
                 settings.db_table_info[settings.db_Rows - 1][i] = (char *)calloc(strlen(argv[i]) + kStringSize, sizeof(char));
                 sscanf(argv[i], "%[^\n]", settings.db_table_info[settings.db_Rows - 1][i]);
+
+                settings.db_table_info_back[settings.db_Rows - 1][i] = (char *)calloc(strlen(argv[i]) + kStringSize, sizeof(char));
+                sscanf(argv[i], "%[^\n]", settings.db_table_info_back[settings.db_Rows - 1][i]);
             }
             else
             {
                 settings.db_table_info[settings.db_Rows - 1][i] = (char *)calloc(kStringSize, sizeof(char));
                 strcpy(settings.db_table_info[settings.db_Rows - 1][i], "NULL");
+
+                settings.db_table_info_back[settings.db_Rows - 1][i] = (char *)calloc(kStringSize, sizeof(char));
+                strcpy(settings.db_table_info_back[settings.db_Rows - 1][i], "NULL");
             }
         }
     }else
@@ -117,13 +134,18 @@ int GetDataFromDB(void *not_used, int argc, char **argv, char **azcolname)
 //     free(insertString);
 // }
 
+void DeleteDataCol()
+{
+    
+}
+
 void UpdateData(int row, int cols)
 {
     char* updateString = (char*)calloc((cols * kStringSize) + kStringSize, sizeof(char));
 
     strcat(updateString, "UPDATE ");
     strcat(updateString, settings.db_table_names[settings.current_table]);
-    strcat(updateString, " SET");
+    strcat(updateString, "\n SET ");
 
     for (int i = 0; i < cols; i++)
     {
@@ -132,23 +154,40 @@ void UpdateData(int row, int cols)
 
         if (settings.db_table_info[row][i] != NULL)
         {
+            strcat(updateString, "'");
             strcat(updateString, settings.db_table_info[row][i]);
+            strcat(updateString, "'");
         }else
         {
-            strcat(updateString, "NULL");
+            strcat(updateString, "'NULL'");
         }
         
-        strcat(updateString, "\'");
+        // strcat(updateString, "'");
 
         if (i < cols - 1)
         {
-            strcat(updateString, "\' ");   
+            strcat(updateString, ", ");
+            // strcat(updateString, " ");
         }
     }
-    strcat(updateString, "WHERE ");
-    // strcat(updateString, "");
+    strcat(updateString, "\nWHERE ");
 
-    // RunQuery(updateString, settings.db_current, GetDataFromDB);
+    for (int i = 0; i < cols; i++)
+    {
+        strcat(updateString, settings.db_ColNames[i]);
+        strcat(updateString, " = '");
+        strcat(updateString, settings.db_table_info_back[row][i]);
+        strcat(updateString, "'");
+
+        if (i < cols - 1)
+        {
+            strcat(updateString, ", ");
+        }
+    }
+
+    strcat(updateString, ";");
+
+    RunQuery(updateString, settings.db_current, nullptr);
 
     free(updateString);
 }
