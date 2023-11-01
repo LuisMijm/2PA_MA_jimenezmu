@@ -127,7 +127,7 @@ void DataBaseSelectedWindow()
         sqlite3_close(settings.db_current);
         settings.db_connected = false;
 
-        printf("Disconected from database %s\n", settings.db_names[settings.current_database]);
+        // printf("Disconected from database %s\n", settings.db_names[settings.current_database]);
         /* printf("Disconected from database %s\n", settings.db_names[settings.current_database]); */
 
         //For show console message
@@ -213,6 +213,7 @@ void CurrentTableWindow(int selected_table, int database_selected,
                         char current_table_name[], int n_db_rows = 0, 
                         int n_db_cols = 0)
 {
+    bool keep = true;
     ImGui::SetNextWindowSize(ImVec2(Vec2toImVec2(settings.windowSettings[2].size)));
     ImGui::SetNextWindowPos(ImVec2(Vec2toImVec2(settings.windowSettings[2].position)));
     ImGui::Begin(current_table_name, nullptr , 
@@ -239,10 +240,10 @@ void CurrentTableWindow(int selected_table, int database_selected,
         ImGui::TableHeadersRow();
 
         // Insert data
-        for (int row = 0; row < settings.db_Rows; row++)
+        for (int row = 0; row < settings.db_Rows && keep; row++)
         {
             ImGui::TableNextRow();
-            for (int col = 0; col < settings.db_Cols; col++)
+            for (int col = 0; col < settings.db_Cols && keep; col++)
             {
                 ImGui::TableSetColumnIndex(col);
                 // ImGui::Text(settings.db_table_info[row][col]);
@@ -251,27 +252,104 @@ void CurrentTableWindow(int selected_table, int database_selected,
                 ImGui::InputText("\0", settings.db_table_info[row][col], max_size_value);
 
                 ImGui::PopID();
-                // switch ()
-                // {
-                // case /* constant-expression */:
-                //     /* code */
-                //     break;
-                
-                // default:
-                //     break;
-                // }
-                ImGui::TableSetColumnIndex(settings.db_Cols);
-                if (ImGui::Button("Edit"))
+
+                if (strstr(settings.db_ColTypes[col], "TEXT"))
+                {
+
+                }
+                else if (strstr(settings.db_ColTypes[col], "INTEGER"))
+                {
+
+                }
+                else if(strstr(settings.db_ColTypes[col], "REAL"))
                 {
                     
                 }
+                else if (strstr(settings.db_ColTypes[col], "NUMERIC"))
+                {
+                    
+                }
+
+
+                ImGui::TableSetColumnIndex(settings.db_Cols);
+                
+                ImGui::PushID((((100 * row) + col) + 100000));
+                if (ImGui::Button("Edit"))
+                {
+                    UpdateData(row, settings.db_Cols);
+
+                    // printf("\nshowing table: %s\n", settings.db_table_info[row][col]);
+                    // printf("back table: %s\n", settings.db_table_info_back[row][col]);
+
+                    char db_table_query[300] = "SELECT * FROM ";
+
+                    ResetTable();
+
+                    strcat(db_table_query, settings.db_table_names[settings.current_table]);
+                    settings.db_result_code = RunQuery(db_table_query, settings.db_current, GetDataFromDB);
+                    settings.db_connected = true;
+
+                    time_t current_hour;
+                    time(&current_hour);
+
+                    struct tm *infHour;
+                    infHour = localtime(&current_hour);
+                    char buffer_time[80];
+                    strftime(buffer_time, 80, "[%H:%M:%S]", infHour);
+
+                    settings.console_msg[settings.n_msg].type = 1;
+                    int msg_size = strlen("\nShowing table ") + strlen(settings.db_table_names[settings.current_table]) + strlen(buffer_time);
+                    settings.console_msg[settings.n_msg].string = (char *)calloc(msg_size, sizeof(char));
+
+                    strcat(settings.console_msg[settings.n_msg].string, "\n");
+                    strcat(settings.console_msg[settings.n_msg].string, buffer_time);
+                    strcat(settings.console_msg[settings.n_msg].string, "Showing table ");
+                    strcat(settings.console_msg[settings.n_msg].string, settings.db_table_names[settings.current_table]);
+
+                    settings.n_msg++;
+                }
+                ImGui::PopID();
+
+                ImGui::SameLine();
+
+                ImGui::PushID((((100 * row) + col) + 1000));
+                if (ImGui::Button("Remove"))
+                {
+                    DeleteDataCol(row, settings.db_Cols);
+
+                    char db_table_query[300] = "SELECT * FROM ";
+
+                    ResetTable();
+
+                    strcat(db_table_query, settings.db_table_names[settings.current_table]);
+                    settings.db_result_code = RunQuery(db_table_query, settings.db_current, GetDataFromDB);
+                    settings.db_connected = true;
+
+                    time_t current_hour;
+                    time(&current_hour);
+
+                    struct tm *infHour;
+                    infHour = localtime(&current_hour);
+                    char buffer_time[80];
+                    strftime(buffer_time, 80, "[%H:%M:%S]", infHour);
+
+                    settings.console_msg[settings.n_msg].type = 1;
+                    int msg_size = strlen("\nShowing table ") + strlen(settings.db_table_names[settings.current_table]) + strlen(buffer_time);
+                    settings.console_msg[settings.n_msg].string = (char *)calloc(msg_size, sizeof(char));
+
+                    strcat(settings.console_msg[settings.n_msg].string, "\n");
+                    strcat(settings.console_msg[settings.n_msg].string, buffer_time);
+                    strcat(settings.console_msg[settings.n_msg].string, "Showing table ");
+                    strcat(settings.console_msg[settings.n_msg].string, settings.db_table_names[settings.current_table]);
+
+                    keep = false;
+                }
+                ImGui::PopID();
             }
         }
-
         ImGui::EndTable();
     }
-
-        ImGui::End();
+    ImGui::End();
 }
 
 void ConsoleWindow()
@@ -338,10 +416,10 @@ void SettingsWindow()
         ImGui::Text("|");
         if (ImGui::BeginMenu("Credits"))
         {
-            ImGui::Text("Academic Project done in ESAT by:");
-            if (ImGui::BeginMenu("Carlos Mazcunan"))
+            ImGui::Text("@2023 ESAT Academic Project by");
+            if (ImGui::BeginMenu("Lucas Calatayud"))
             {
-                ImGui::Text("mazcunyanbla@esat-alumni.com");
+                ImGui::Text("calatayudbri@esat-alumni.com");
                 ImGui::EndMenu();
             }
             if (ImGui::BeginMenu("Luis Miguel Jimenez"))
@@ -349,9 +427,9 @@ void SettingsWindow()
                 ImGui::Text("jimenezmu@esat-alumi.com");
                 ImGui::EndMenu();
             }
-            if (ImGui::BeginMenu("Lucas Calatayud"))
+            if (ImGui::BeginMenu("Carlos Mazcunan"))
             {
-                ImGui::Text("calatayudbri@esat-alumni.com");
+                ImGui::Text("mazcunyanbla@esat-alumni.com");
                 ImGui::EndMenu();
             }
 

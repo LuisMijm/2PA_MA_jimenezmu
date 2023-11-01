@@ -39,6 +39,17 @@ int ResetTable();
 int GetTablesFromDB(void *not_used, int argc, char **argv, char **azcolname);
 
 /**
+ * @brief Get the Table Types object
+ * 
+ * @param not_used 
+ * @param argc 
+ * @param argv 
+ * @param azcolname 
+ * @return int 
+ */
+int GetTableTypes(void *not_used, int argc, char **argv, char **azcolname);
+
+/**
  * @brief Retrieves data from a database query and stores it in data structures.
  *
  * This function is used to retrieve data from a database query and store it in
@@ -59,7 +70,27 @@ int GetDataFromDB(void *not_used, int argc, char **argv, char **azcolname);
 // void InsertDataLine(int cols);
 
 /**
-*/
+ * @brief 
+ * 
+ * @param query 
+ * @param value 
+ */
+void CheckString(char *query, char *value);
+
+/**
+ * @brief 
+ * 
+ * @param row 
+ * @param cols 
+ */
+void DeleteDataCol(int row, int cols);
+
+/**
+ * @brief 
+ * 
+ * @param row 
+ * @param cols 
+ */
 void UpdateData(int row, int cols);
 
 /**

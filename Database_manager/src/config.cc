@@ -36,7 +36,7 @@ enum WindowSetting
 void InitSettings()
 {
 
-/*     settings.windowSettings[kWindowSetting_DataBaseSelected].size = {380.0f, 180.0f};
+    settings.windowSettings[kWindowSetting_DataBaseSelected].size = {380.0f, 180.0f};
     settings.windowSettings[kWindowSetting_DataBaseSelected].position = {20.0f, 20.0f};
 
     settings.windowSettings[kWindowSetting_TableSelected].size = {380.0f, 180.0f};
@@ -49,11 +49,11 @@ void InitSettings()
     settings.windowSettings[kWindowSetting_ConsoleWindow].position = {20.0f, 420.0f};
 
    settings.windowSettings[kWindowSetting_QueryWindow].size =  {1160.0f, 170.0f};
-   settings.windowSettings[kWindowSetting_QueryWindow].position = {20.0f, 610.0f}; */
+   settings.windowSettings[kWindowSetting_QueryWindow].position = {20.0f, 610.0f};
 
     
-/*     settings.screen_window_width = 1200;
-    settings.screen_window_height = 800; */
+    settings.screen_window_width = 1200;
+    settings.screen_window_height = 800;
 
     settings.fps_current_time = 0.0f;
     settings.fps_last_time = 0.0f;
@@ -93,7 +93,7 @@ int ConnectToDB(char* db_path, sqlite3** db, int* result_code)
         sqlite3_close(*db);
         return 1;
     }else{
-        printf("Database open\n");
+        // printf("Database open\n");
         
         return 0;
     }
@@ -121,12 +121,6 @@ void AddErrorMsg(char *err_msg)
     }
 
 
-    // if(settings.console_msg != nullptr){
-    //     free(settings.console_msg);
-    //     settings.console_msg = nullptr;
-    // }
-
-
     settings.console_msg[settings.n_msg].string = (char *)calloc((err_size + string_size + 3) , sizeof(char));
                                                         
 
@@ -139,17 +133,35 @@ void AddErrorMsg(char *err_msg)
     
 }
 
+int RunQuery(char *query, sqlite3 *db, int callback(void *, int, char **, char **), int* count)
+{
+    int result_code;
+    char *err_msg = (char *)calloc('\0', 100 * sizeof(char));
+
+    result_code = sqlite3_exec(db, query, callback, (void*)count, &err_msg);
+
+    // printf("\nerror: %s\n", err_msg);
+
+    if (err_msg != nullptr)
+    {
+        AddErrorMsg(err_msg);
+    }
+
+    free(err_msg);
+
+    return result_code;
+}
+
+
 int RunQuery(char *query, sqlite3 *db, int callback(void *, int, char **, char **))
 {
     int result_code;
     char* err_msg = (char*)calloc('\0', 100 * sizeof(char));
 
     result_code = sqlite3_exec(db, query,  callback, 0, &err_msg);
-    
-    printf("\n");
-    printf("error: %s", err_msg);
-    printf("\n");
-    
+
+    // printf("\nerror: %s\n", err_msg);
+
     if (err_msg != nullptr)
     {
         AddErrorMsg(err_msg);
@@ -257,8 +269,6 @@ int SetSettings(void* not_used, int argc, char** argv, char** azcolname)
     {
         sscanf(argv[2], "%f", &settings.windowSettings[kWindowSetting_QueryWindow].position.y);
     }
-
-
     else if(!strcmp(argv[1], "window_settings_size_x"))
     {
         sscanf(argv[2], "%f", &settings.windowSettings[kWindowSetting_SettingsWindow].size.x);
@@ -310,16 +320,6 @@ void DataBaseNames(char* db_path)
     {
         printf("Can't open folder to collect db names\n");
     }
-
-    // for(int i = 0; i < 1; i++){
-        // settings.all_db_names = (char*)realloc(settings.all_db_names, (kStringSize * (i + 1)) * sizeof(char));
-        // strcat(settings.all_db_names, settings.db_names[i]);
-        // strcat(settings.all_db_names, "\0");
-        // strcat(settings.all_db_names, settings.db_names[i+1]);
-    // }
-    // strcat(settings.all_db_names, "\0\0");
-
-    // printf("%s\n", settings.all_db_names);
 }
 
 

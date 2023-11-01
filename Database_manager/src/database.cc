@@ -9,13 +9,10 @@
 
 #include <config.h>
 
-// typedef char* String;
-
 
 int ResetTable()
 {
     FreeTable(settings.db_Cols, settings.db_Rows);
-    // settings.db_table_count = 0;
     settings.db_Cols = 0;
     settings.db_Rows = 0;
 
@@ -25,15 +22,12 @@ int ResetTable()
 
 int GetTablesFromDB(void *not_used, int argc, char **argv, char **azcolname)
 {
-    printf("%s\n", argv[0]);
-   
-
     settings.db_table_count++;
     settings.db_table_names = (char**)realloc(settings.db_table_names, 
                                settings.db_table_count * sizeof(char*));
                                
     settings.db_table_names[settings.db_table_count - 1] = (char*)calloc(kStringSize, sizeof(char));
-    // settings.db_table_names[settings.db_table_count - 1] = argv[1];
+
     sscanf(argv[0], "%s", settings.db_table_names[settings.db_table_count - 1]);
 
     return 0;
@@ -42,12 +36,26 @@ int GetTablesFromDB(void *not_used, int argc, char **argv, char **azcolname)
 
 // void Asses(char* data, char* type)
 // {
-//     strstr(type, );
+//     strstr(type, "TEXT");
 // }
+
+int GetTableTypes(void *used, int argc, char **argv, char **azcolname)
+{
+    int* count = (int*)used;
+    
+    sscanf(argv[2], "%s", settings.db_ColTypes[count[0]]);
+    printf(settings.db_ColTypes[*count]);
+    count++;
+
+    return 0;
+}
 
 int GetDataFromDB(void *not_used, int argc, char **argv, char **azcolname)
 {
     not_used = 0;
+    int count = 0;
+    char pragma_query[300] = "PRAGMA table_info(";
+
     if (argc > 0 && argc <= 64)
     {
         if (settings.db_Rows == 0)
@@ -64,8 +72,12 @@ int GetDataFromDB(void *not_used, int argc, char **argv, char **azcolname)
 
                 settings.db_ColTypes[i] = (char *)calloc(kStringSize, sizeof(char));
 
-                // sscanf();
             }
+
+            strcat(pragma_query, settings.db_table_names[settings.current_table]);
+            strcat(pragma_query, ");");
+            printf("pragma query: %s", pragma_query);
+            RunQuery(pragma_query, settings.db_current, GetTableTypes, &count);
         }
 
         settings.db_Rows++;
@@ -76,6 +88,7 @@ int GetDataFromDB(void *not_used, int argc, char **argv, char **azcolname)
 
         // Col memory reserve
         settings.db_table_info[settings.db_Rows - 1] = (char **)calloc(argc, sizeof(char *));
+        settings.db_table_info_back[settings.db_Rows - 1] = (char **)calloc(argc, sizeof(char *));
 
         // Strings memory reserve
         for (int i = 0; i < argc; i++)
@@ -91,10 +104,10 @@ int GetDataFromDB(void *not_used, int argc, char **argv, char **azcolname)
             else
             {
                 settings.db_table_info[settings.db_Rows - 1][i] = (char *)calloc(kStringSize, sizeof(char));
-                strcpy(settings.db_table_info[settings.db_Rows - 1][i], "NULL");
+                strcpy(settings.db_table_info[settings.db_Rows - 1][i], "\0");
 
                 settings.db_table_info_back[settings.db_Rows - 1][i] = (char *)calloc(kStringSize, sizeof(char));
-                strcpy(settings.db_table_info_back[settings.db_Rows - 1][i], "NULL");
+                strcpy(settings.db_table_info_back[settings.db_Rows - 1][i], "\0");
             }
         }
     }else
@@ -131,17 +144,63 @@ int GetDataFromDB(void *not_used, int argc, char **argv, char **azcolname)
 
 //     RunQuery(insertString, settings.db_current, GetDataFromDB);
 
-//     free(insertString);
 // }
 
-void DeleteDataCol()
+void CheckString(char *query, char *value)
 {
-    
+    char v[2];
+    for (int i = 0; i < (signed int)strlen(value); i++)
+    {
+        if (value[i] == 39)
+        {
+            strcat(query, "'");
+        }
+        v[0] = value[i];
+        v[1] = '\0';
+        strcat(query, v);
+    }
+}
+
+void DeleteDataCol(int row, int cols)
+{
+    char deleteString[4096] = "\0";
+
+    strcat(deleteString, "DELETE FROM ");
+    strcat(deleteString, settings.db_table_names[settings.current_table]);
+    strcat(deleteString, "\nWHERE ");
+
+    for (int i = 0; i < cols; i++)
+    {
+        strcat(deleteString, settings.db_ColNames[i]);
+
+        if (settings.db_table_info_back[row][i][0] == '\0')
+        {
+            strcat(deleteString, " IS NULL OR ");
+            strcat(deleteString, settings.db_ColNames[i]);
+            strcat(deleteString, " = ''");
+        }
+        else
+        {
+            strcat(deleteString, " = '");
+            CheckString(deleteString, settings.db_table_info_back[row][i]);
+            strcat(deleteString, "'");
+        }
+
+        if (i < cols - 1)
+        {
+            strcat(deleteString, " AND ");
+        }
+    }
+    strcat(deleteString, ";");
+
+    printf("\n query: %s", deleteString);
+
+    RunQuery(deleteString, settings.db_current, GetDataFromDB);
 }
 
 void UpdateData(int row, int cols)
 {
-    char* updateString = (char*)calloc((cols * kStringSize) + kStringSize, sizeof(char));
+    char updateString[4096] = "\0";
 
     strcat(updateString, "UPDATE ");
     strcat(updateString, settings.db_table_names[settings.current_table]);
@@ -155,19 +214,16 @@ void UpdateData(int row, int cols)
         if (settings.db_table_info[row][i] != NULL)
         {
             strcat(updateString, "'");
-            strcat(updateString, settings.db_table_info[row][i]);
+            CheckString(updateString, settings.db_table_info[row][i]);
             strcat(updateString, "'");
         }else
         {
             strcat(updateString, "'NULL'");
         }
-        
-        // strcat(updateString, "'");
 
         if (i < cols - 1)
         {
             strcat(updateString, ", ");
-            // strcat(updateString, " ");
         }
     }
     strcat(updateString, "\nWHERE ");
@@ -175,21 +231,29 @@ void UpdateData(int row, int cols)
     for (int i = 0; i < cols; i++)
     {
         strcat(updateString, settings.db_ColNames[i]);
-        strcat(updateString, " = '");
-        strcat(updateString, settings.db_table_info_back[row][i]);
-        strcat(updateString, "'");
+
+        if (settings.db_table_info_back[row][i][0] == '\0')
+        {
+            strcat(updateString, " IS NULL OR ");
+            strcat(updateString, settings.db_ColNames[i]);
+            strcat(updateString, " = ''");
+        }
+        else
+        {
+            strcat(updateString, " = '");
+            CheckString(updateString, settings.db_table_info_back[row][i]);
+            strcat(updateString, "'");
+        }
 
         if (i < cols - 1)
         {
-            strcat(updateString, ", ");
+            strcat(updateString, " AND ");
         }
     }
 
     strcat(updateString, ";");
 
-    RunQuery(updateString, settings.db_current, nullptr);
-
-    free(updateString);
+    RunQuery(updateString, settings.db_current, GetDataFromDB);
 }
 
 
@@ -197,11 +261,8 @@ void FreeTable(int cols, int rows) {
 
     for(int i = 0; i < cols; i++)
     {
-        // printf("free col: %d\n", i);
-        for(int j = 0; j < rows; j++){
-            // printf("free row: %d\n", j);
-            // printf("table info 1: %s\n", settings.db_table_info[j][i]);
-
+        for(int j = 0; j < rows; j++)
+        {
             free(settings.db_table_info[j][i]);
             settings.db_table_info[j][i] = nullptr;
         }

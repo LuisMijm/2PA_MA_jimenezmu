@@ -133,6 +133,17 @@ int ConnectToDB(char *db_path, sqlite3 **db, int *result_code);
 void AddErrorMsg(char *err_msg);
 
 /**
+ * @brief 
+ * 
+ * @param query 
+ * @param db 
+ * @param callback 
+ * @param count 
+ * @return int 
+ */
+int RunQuery(char *query, sqlite3 *db, int callback(void *, int, char **, char **), int* count);
+
+/**
  * @brief Executes an SQL query on an SQLite database.
  *
  * This function executes the specified SQL query on the provided SQLite database
