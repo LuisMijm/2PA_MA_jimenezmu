@@ -247,29 +247,38 @@ void CurrentTableWindow(int selected_table, int database_selected,
             {
                 ImGui::TableSetColumnIndex(col);
                 // ImGui::Text(settings.db_table_info[row][col]);
-                ImGui::PushID((100 * row) + col);
                 // ImGui::InputText("\0", settings.db_table_info[row][col], sizeof(settings.db_table_info[row][col]));
-                ImGui::InputText("\0", settings.db_table_info[row][col], max_size_value);
 
-                ImGui::PopID();
+                // ImGui::InputText("\0", settings.db_table_info[row][col], max_size_value);
+                ImGui::PushID((100 * row) + col);
 
-                if (strstr(settings.db_ColTypes[col], "TEXT"))
+                // printf("\nrow = %d, col = %d type: %s", row, col, settings.db_ColTypes[col]);
+
+                if (strstr(settings.db_ColTypes[col], "TEXT") || 
+                    strstr(settings.db_ColTypes[col], "VARCHAR") ||
+                    strstr(settings.db_ColTypes[col], "CHAR") || 
+                    strstr(settings.db_ColTypes[col], "DATE"))
                 {
-
+                    ImGui::InputText("\0", settings.db_table_info[row][col], max_size_value, ImGuiInputTextFlags_AutoSelectAll);
                 }
-                else if (strstr(settings.db_ColTypes[col], "INTEGER"))
+                else if (strstr(settings.db_ColTypes[col], "INTEGER") || 
+                         strstr(settings.db_ColTypes[col], "TINYINT"))
                 {
-
+                    ImGui::InputText("\0", settings.db_table_info[row][col], max_size_value, ImGuiInputTextFlags_CharsNoBlank | ImGuiInputTextFlags_CharsDecimal);
                 }
                 else if(strstr(settings.db_ColTypes[col], "REAL"))
                 {
-                    
+                    ImGui::InputText("\0", settings.db_table_info[row][col], max_size_value, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_CharsNoBlank);
                 }
                 else if (strstr(settings.db_ColTypes[col], "NUMERIC"))
                 {
-                    
+                    ImGui::InputText("\0", settings.db_table_info[row][col], max_size_value, ImGuiInputTextFlags_CharsNoBlank | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_CharsScientific);
+                }else
+                {
+                    ImGui::InputText("\0", settings.db_table_info[row][col], max_size_value, ImGuiInputTextFlags_AutoSelectAll);
                 }
 
+                ImGui::PopID();
 
                 ImGui::TableSetColumnIndex(settings.db_Cols);
                 
@@ -277,7 +286,7 @@ void CurrentTableWindow(int selected_table, int database_selected,
                 if (ImGui::Button("Edit"))
                 {
                     UpdateData(row, settings.db_Cols);
-
+                
                     // printf("\nshowing table: %s\n", settings.db_table_info[row][col]);
                     // printf("back table: %s\n", settings.db_table_info_back[row][col]);
 

@@ -147,8 +147,6 @@ int RunQuery(char *query, sqlite3 *db, int callback(void *, int, char **, char *
         AddErrorMsg(err_msg);
     }
 
-    free(err_msg);
-
     return result_code;
 }
 
@@ -285,10 +283,6 @@ int SetSettings(void* not_used, int argc, char** argv, char** azcolname)
     {
         sscanf(argv[2], "%f", &settings.windowSettings[kWindowSetting_SettingsWindow].position.y);
     }
-    // else if(!strcmp(argv[1], ""))
-    // {
-    //     sscanf(argv[2], "%", &settings.);
-    // }
 
     return 0;
 }

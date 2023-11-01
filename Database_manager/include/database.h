@@ -24,6 +24,15 @@
 int ResetTable();
 
 /**
+ * @brief
+ * This function assesses the given data and its type to determine how to process it. The function examines the data type provided and performs specific actions based on that type. (NOT implemented)
+ *
+ * @param data
+ * @param type
+ */
+void AssesData(char *data, char *type);
+
+/**
  * @brief Retrieves tables from the database and stores them in a data structure.
  *
  * This function is used to obtain table names from a database and store them
@@ -39,13 +48,17 @@ int ResetTable();
 int GetTablesFromDB(void *not_used, int argc, char **argv, char **azcolname);
 
 /**
- * @brief Get the Table Types object
- * 
- * @param not_used 
- * @param argc 
- * @param argv 
- * @param azcolname 
- * @return int 
+ * @brief Callback function to obtain column types from a database table.
+ *
+ * This callback function is used to obtain column types from a database table. It is typically called within a database query and processes the results to populate an array with column types.
+ *
+ * @param used A pointer to an integer used to track the count of processed columns.
+ * @param argc The number of columns in the query result.
+ * @param argv An array of strings representing the column data.
+ * @param azcolname An array of column names (not used in this function).
+ *
+ * @return Always returns 0.
+ *
  */
 int GetTableTypes(void *not_used, int argc, char **argv, char **azcolname);
 
@@ -70,40 +83,57 @@ int GetDataFromDB(void *not_used, int argc, char **argv, char **azcolname);
 // void InsertDataLine(int cols);
 
 /**
- * @brief 
- * 
- * @param query 
- * @param value 
+ * @brief Check and modify a string to ensure proper handling of single quotes.
+ *
+ * This function checks a given string and modifies it to ensure proper handling of single quotes (apostrophes). It replaces any single quotes with double single quotes to prevent SQL injection and related issues.
+ *
+ * @param query The query or string where single quotes need to be checked and modified.
+ * @param value The value to be checked and processed for single quotes.
+ *
  */
 void CheckString(char *query, char *value);
 
 /**
- * @brief 
- * 
- * @param row 
- * @param cols 
+ * @brief Delete data from a database table based on specified conditions.
+ *
+ * This function constructs a SQL DELETE statement to remove data from a database table based on specified conditions. It creates the appropriate query string and then executes the query to delete data from the table.
+ *
+ * @param row The row index indicating which row of data to delete.
+ * @param cols The number of columns in the table.
+ *
  */
 void DeleteDataCol(int row, int cols);
 
 /**
- * @brief 
- * 
- * @param row 
- * @param cols 
+ * @brief Update data in a database table based on specified conditions.
+ *
+ * This function constructs a SQL UPDATE statement to modify data in a database table based on specified conditions. It creates the appropriate query string and then executes the query to update the table with new data.
+ *
+ * @param row The row index indicating which row of data to update.
+ * @param cols The number of columns in the table.
+ *
  */
 void UpdateData(int row, int cols);
 
 /**
- * @brief Frees memory associated with database table data.
+ * @brief Free memory allocated for a database table and related data.
  *
- * This function is responsible for freeing memory associated with database table data,
- * including column names and data rows. It should be used to clean up allocated memory
- * after data processing is complete.
+ * This function releases memory allocated for a database table and related data structures. It ensures that all dynamically allocated memory is properly deallocated to prevent memory leaks.
  *
  * @param cols The number of columns in the table.
  * @param rows The number of rows in the table.
+ * @param table A pointer to a pointer to a two-dimensional array representing the table data.
+ *
  */
-void FreeTable(int cols, int rows);
+void FreeTable(int cols, int rows, char ***table);
+
+/**
+ * @brief Free all allocated resources and clean up the database-related data.
+ *
+ * This function performs cleanup by freeing all allocated resources and memory used for managing database-related data, including table information, database connections, and related arrays. It ensures that all dynamically allocated memory is properly deallocated to prevent memory leaks.
+ *
+ */
+void GeneralFree();
 
 
 #endif

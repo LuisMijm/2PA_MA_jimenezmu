@@ -38,7 +38,7 @@ struct WindowSettings{
     Vec2 size, position;
 };
 
-struct ConsoleMessage{
+struct TConsoleMessage{
     char* string;
     int type;
 };
@@ -94,8 +94,7 @@ struct Settings{
     char querie_text[512];
 
     //Message Console
-    ConsoleMessage console_msg[100];
-    int type_msg;
+    TConsoleMessage console_msg[100];
     int n_msg;
 };
 

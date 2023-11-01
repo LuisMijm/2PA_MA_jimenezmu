@@ -86,6 +86,14 @@ void CurrentTableWindow(int selected_table, int database_selected,
 void ConsoleWindow();
 
 /**
+ * @brief Display a settings window for viewing application information and performing tests.
+ *
+ * This function creates a settings window using ImGui for displaying various application information, including resolution, frame rate, database counts, and the application version. It also provides buttons for performing tests and viewing application credits. Additionally, it displays the current connection status.
+ *
+ */
+void SettingsWindow();
+
+/**
  * @brief Display a window for inputting and executing database queries.
  *
  * This function creates a window using ImGui for inputting database queries and provides options to submit the query and clear the input field. It also handles the execution of queries and updates the user interface accordingly.

@@ -12,13 +12,35 @@
 
 int ResetTable()
 {
-    FreeTable(settings.db_Cols, settings.db_Rows);
+    FreeTable(settings.db_Cols, settings.db_Rows, settings.db_table_info);
+    FreeTable(settings.db_Cols, settings.db_Rows, settings.db_table_info_back);
     settings.db_Cols = 0;
     settings.db_Rows = 0;
 
     return 0;
 }
 
+void AssesData(char* data, char* type)
+{
+    int dot_count = 0;
+    
+    if (strstr(type, "TEXT") != NULL)
+    {
+        
+    }
+    else if (strstr(type, "INTEGER") != NULL)
+    {
+        
+    }
+    else if (strstr(type, "REAL") != NULL)
+    {
+        
+    }
+    else if (strstr(type, "NUMERIC") != NULL)
+    {
+        
+    }
+}
 
 int GetTablesFromDB(void *not_used, int argc, char **argv, char **azcolname)
 {
@@ -33,19 +55,13 @@ int GetTablesFromDB(void *not_used, int argc, char **argv, char **azcolname)
     return 0;
 }
 
-
-// void Asses(char* data, char* type)
-// {
-//     strstr(type, "TEXT");
-// }
-
 int GetTableTypes(void *used, int argc, char **argv, char **azcolname)
 {
     int* count = (int*)used;
     
     sscanf(argv[2], "%s", settings.db_ColTypes[count[0]]);
-    printf(settings.db_ColTypes[*count]);
-    count++;
+    printf("\ncol %d type: %s - argv2: %s", count[0], settings.db_ColTypes[*count], argv[2]);
+    count[0]++;
 
     return 0;
 }
@@ -76,7 +92,7 @@ int GetDataFromDB(void *not_used, int argc, char **argv, char **azcolname)
 
             strcat(pragma_query, settings.db_table_names[settings.current_table]);
             strcat(pragma_query, ");");
-            printf("pragma query: %s", pragma_query);
+            // printf("pragma query: %s", pragma_query);
             RunQuery(pragma_query, settings.db_current, GetTableTypes, &count);
         }
 
@@ -256,31 +272,76 @@ void UpdateData(int row, int cols)
     RunQuery(updateString, settings.db_current, GetDataFromDB);
 }
 
-
-void FreeTable(int cols, int rows) {
-
-    for(int i = 0; i < cols; i++)
+void FreeTable(int cols, int rows, char*** table) {
+    if (table != nullptr)
     {
-        for(int j = 0; j < rows; j++)
+        for (int i = 0; i < cols; i++)
         {
-            free(settings.db_table_info[j][i]);
-            settings.db_table_info[j][i] = nullptr;
+            for (int j = 0; j < rows; j++)
+            {
+                free(table[j][i]);
+                table[j][i] = nullptr;
+            }
         }
+
+        for (int i = 0; i < rows; i++)
+        {
+            free(table[i]);
+            table[i] = nullptr;
+        }
+
+        for (int i = 0; i < cols; i++)
+        {
+            if (settings.db_ColNames != nullptr)
+            {
+                if (settings.db_ColNames[i] != nullptr)
+                {
+                    free(settings.db_ColNames[i]);
+                    settings.db_ColNames[i] = nullptr;
+                }
+            }
+
+            if (settings.db_ColTypes != nullptr)
+            {   
+                if (settings.db_ColTypes[i] != nullptr)
+                {
+                    free(settings.db_ColTypes[i]);
+                    settings.db_ColTypes[i];
+                }
+            }
+        }
+
+        free(settings.db_ColNames);
+        settings.db_ColNames = nullptr;
+
+        free(settings.db_ColTypes);
+        settings.db_ColTypes = nullptr;
+        // free(table);
+        // table = nullptr;
     }
-    
-    for (int i = 0; i < rows; i++)
+}
+
+void GeneralFree() 
+{
+    FreeTable(settings.db_Cols, settings.db_Rows, settings.db_table_info);
+    FreeTable(settings.db_Cols, settings.db_Rows, settings.db_table_info_back);
+
+    if (settings.db_current != nullptr)
     {
-        free(settings.db_table_info[i]);
-        settings.db_table_info[i] = nullptr;
+        free(settings.db_current);
+        settings.db_current = nullptr;
     }
-    
-    for(int i = 0; i < cols; i++){
-        free(settings.db_ColNames[i]);
-        settings.db_ColNames[i] = nullptr;
+    if (settings.db_internal != nullptr)
+    {
+        free(settings.db_internal);
+        settings.db_internal = nullptr;
     }
 
-    free(settings.db_ColNames);
-    settings.db_ColNames = nullptr;
-    free(settings.db_table_info);
-    settings.db_table_info = nullptr;
+    for(int i = 0; i < settings.db_Cols; i++) {
+        free(settings.db_table_names[i]);
+        settings.db_table_names[i] = nullptr;
+    }
+    
+    free(settings.db_table_names);
+    settings.db_table_names = nullptr;
 }
