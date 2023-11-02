@@ -77,7 +77,7 @@ void InitSettings()
     
     settings.n_msg = 0;
 
-    
+    settings.edit_table = true;
     
     settings.db_table_names = (char **)realloc(settings.db_table_names, 1 * sizeof(char *));
 }

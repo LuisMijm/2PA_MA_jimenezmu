@@ -1,0 +1,28 @@
+Learning outcomes explanation:
+
+P1
+    The design is explained in the database section of the briefing document.
+P2
+    The user interface, output, data validation, and querying are explained in the User Manual section of the briefing document.
+P3
+    The query is explained in the "Query Window" section of the user manual in the briefing document.
+P4
+    The test and system requirements can be found in the "Table Window" section of the briefing manual, where it is explained that we store the data in a variable, checking the field types and how they are extracted through queries.
+P5
+    The briefing document contains both technical and user documentation. Also, there is a Doxygen document to use as a reference for a more in-depth code explanation.
+M1
+    The program design is explained in the user manual of the briefing document.
+M2
+    To ensure that the database includes system security and maintenance, we used SQLite Studio as a tool to create and manage the information.
+M3
+    The query window that allows the user to insert queries manually has been very thoughtfully tested to prove that it has no flaws and that any query can be executed from it (DELETE, UPDATE, SELECT, INSERT INTO...).
+M4
+    The database's effectiveness, testing, and explanation are detailed in the database section of the briefing.
+M5
+    The data flow diagrams and flowcharts can be found in the Doxygen documentation, and a brief explanation of those can be found throughout the briefing document.
+D1
+    The effectiveness of the design is showcased in its versatility in queries and database usage. You can connect to any database in the "Databases" folder and execute any query in the query window. Additionally, there are several buttons for executing queries directly. More details about this functionality can be found in the User Manual section of the briefing document
+D2
+    Since the program can be easily understood and allows the user to perform many actions directly from the interface and can also execute any query from the query window, we believe that it meets the effectiveness of the database solution in relation to user and system requirements. Additionally, improvements have been suggested in the Conclusions section of the briefing document.
+D3
+    The database improvements are detailed in the database section of the briefing document.

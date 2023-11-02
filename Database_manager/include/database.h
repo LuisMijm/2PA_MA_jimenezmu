@@ -62,6 +62,11 @@ int GetTablesFromDB(void *not_used, int argc, char **argv, char **azcolname);
  */
 int GetTableTypes(void *not_used, int argc, char **argv, char **azcolname);
 
+
+/**
+*/
+int GetQueryFromDB(void *not_used, int argc, char **argv, char **azcolname);
+
 /**
  * @brief Retrieves data from a database query and stores it in data structures.
  *

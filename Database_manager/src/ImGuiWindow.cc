@@ -176,7 +176,7 @@ void TableSelectedWindow(int selected_database)
     if(ImGui::Button("OK") && settings.db_table_count >= 0){
             
         char db_table_query[300] = "SELECT * FROM ";
-
+        settings.edit_table = true;
         ResetTable();
 
         strcat(db_table_query, settings.db_table_names[settings.current_table]);
@@ -283,75 +283,78 @@ void CurrentTableWindow(int selected_table, int database_selected,
                 ImGui::TableSetColumnIndex(settings.db_Cols);
                 
                 ImGui::PushID((((100 * row) + col) + 100000));
-                if (ImGui::Button("Edit"))
+                if(settings.edit_table)
                 {
-                    UpdateData(row, settings.db_Cols);
-                
-                    // printf("\nshowing table: %s\n", settings.db_table_info[row][col]);
-                    // printf("back table: %s\n", settings.db_table_info_back[row][col]);
+                    if (ImGui::Button("Update"))
+                    {
+                        UpdateData(row, settings.db_Cols);
 
-                    char db_table_query[300] = "SELECT * FROM ";
+                        // printf("\nshowing table: %s\n", settings.db_table_info[row][col]);
+                        // printf("back table: %s\n", settings.db_table_info_back[row][col]);
 
-                    ResetTable();
+                        char db_table_query[300] = "SELECT * FROM ";
 
-                    strcat(db_table_query, settings.db_table_names[settings.current_table]);
-                    settings.db_result_code = RunQuery(db_table_query, settings.db_current, GetDataFromDB);
-                    settings.db_connected = true;
+                        ResetTable();
 
-                    time_t current_hour;
-                    time(&current_hour);
+                        strcat(db_table_query, settings.db_table_names[settings.current_table]);
+                        settings.db_result_code = RunQuery(db_table_query, settings.db_current, GetDataFromDB);
+                        settings.db_connected = true;
 
-                    struct tm *infHour;
-                    infHour = localtime(&current_hour);
-                    char buffer_time[80];
-                    strftime(buffer_time, 80, "[%H:%M:%S]", infHour);
+                        time_t current_hour;
+                        time(&current_hour);
 
-                    settings.console_msg[settings.n_msg].type = 1;
-                    int msg_size = strlen("\nShowing table ") + strlen(settings.db_table_names[settings.current_table]) + strlen(buffer_time);
-                    settings.console_msg[settings.n_msg].string = (char *)calloc(msg_size, sizeof(char));
+                        struct tm *infHour;
+                        infHour = localtime(&current_hour);
+                        char buffer_time[80];
+                        strftime(buffer_time, 80, "[%H:%M:%S]", infHour);
 
-                    strcat(settings.console_msg[settings.n_msg].string, "\n");
-                    strcat(settings.console_msg[settings.n_msg].string, buffer_time);
-                    strcat(settings.console_msg[settings.n_msg].string, "Showing table ");
-                    strcat(settings.console_msg[settings.n_msg].string, settings.db_table_names[settings.current_table]);
+                        settings.console_msg[settings.n_msg].type = 1;
+                        int msg_size = strlen("\nShowing table ") + strlen(settings.db_table_names[settings.current_table]) + strlen(buffer_time);
+                        settings.console_msg[settings.n_msg].string = (char *)calloc(msg_size, sizeof(char));
 
-                    settings.n_msg++;
-                }
-                ImGui::PopID();
+                        strcat(settings.console_msg[settings.n_msg].string, "\n");
+                        strcat(settings.console_msg[settings.n_msg].string, buffer_time);
+                        strcat(settings.console_msg[settings.n_msg].string, "Showing table ");
+                        strcat(settings.console_msg[settings.n_msg].string, settings.db_table_names[settings.current_table]);
 
-                ImGui::SameLine();
+                        settings.n_msg++;
+                    }
+                    ImGui::PopID();
 
-                ImGui::PushID((((100 * row) + col) + 1000));
-                if (ImGui::Button("Remove"))
-                {
-                    DeleteDataCol(row, settings.db_Cols);
+                    ImGui::SameLine();
 
-                    char db_table_query[300] = "SELECT * FROM ";
+                    ImGui::PushID((((100 * row) + col) + 1000));
+                    if (ImGui::Button("Remove"))
+                    {
+                        DeleteDataCol(row, settings.db_Cols);
 
-                    ResetTable();
+                        char db_table_query[300] = "SELECT * FROM ";
 
-                    strcat(db_table_query, settings.db_table_names[settings.current_table]);
-                    settings.db_result_code = RunQuery(db_table_query, settings.db_current, GetDataFromDB);
-                    settings.db_connected = true;
+                        ResetTable();
 
-                    time_t current_hour;
-                    time(&current_hour);
+                        strcat(db_table_query, settings.db_table_names[settings.current_table]);
+                        settings.db_result_code = RunQuery(db_table_query, settings.db_current, GetDataFromDB);
+                        settings.db_connected = true;
 
-                    struct tm *infHour;
-                    infHour = localtime(&current_hour);
-                    char buffer_time[80];
-                    strftime(buffer_time, 80, "[%H:%M:%S]", infHour);
+                        time_t current_hour;
+                        time(&current_hour);
 
-                    settings.console_msg[settings.n_msg].type = 1;
-                    int msg_size = strlen("\nShowing table ") + strlen(settings.db_table_names[settings.current_table]) + strlen(buffer_time);
-                    settings.console_msg[settings.n_msg].string = (char *)calloc(msg_size, sizeof(char));
+                        struct tm *infHour;
+                        infHour = localtime(&current_hour);
+                        char buffer_time[80];
+                        strftime(buffer_time, 80, "[%H:%M:%S]", infHour);
 
-                    strcat(settings.console_msg[settings.n_msg].string, "\n");
-                    strcat(settings.console_msg[settings.n_msg].string, buffer_time);
-                    strcat(settings.console_msg[settings.n_msg].string, "Showing table ");
-                    strcat(settings.console_msg[settings.n_msg].string, settings.db_table_names[settings.current_table]);
+                        settings.console_msg[settings.n_msg].type = 1;
+                        int msg_size = strlen("\nShowing table ") + strlen(settings.db_table_names[settings.current_table]) + strlen(buffer_time);
+                        settings.console_msg[settings.n_msg].string = (char *)calloc(msg_size, sizeof(char));
 
-                    keep = false;
+                        strcat(settings.console_msg[settings.n_msg].string, "\n");
+                        strcat(settings.console_msg[settings.n_msg].string, buffer_time);
+                        strcat(settings.console_msg[settings.n_msg].string, "Showing table ");
+                        strcat(settings.console_msg[settings.n_msg].string, settings.db_table_names[settings.current_table]);
+
+                        keep = false;
+                    }
                 }
                 ImGui::PopID();
             }
@@ -565,10 +568,10 @@ void QuerieWindow()
                               ImGuiInputTextFlags_AllowTabInput);
     if(ImGui::Button("Submit"))
     {
-
+        settings.edit_table = false;
         ResetTable();
         
-        settings.db_result_code = RunQuery(settings.querie_text, settings.db_current, GetDataFromDB);
+        settings.db_result_code = RunQuery(settings.querie_text, settings.db_current, GetQueryFromDB);
         
         if (0 == settings.db_result_code && settings.querie_text[0] != '\0')
         {

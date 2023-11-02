@@ -96,6 +96,8 @@ struct Settings{
     //Message Console
     TConsoleMessage console_msg[100];
     int n_msg;
+    
+    bool edit_table;
 };
 
 extern Settings settings;

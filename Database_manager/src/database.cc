@@ -1,4 +1,13 @@
-
+/**
+ * @file database.cc
+ * @author Luis Miguel Jiménez
+ * @brief
+ * @version 0.1
+ * @date 2023-11-01
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
 #include <database.h>
 
 #include <stdio.h>
@@ -59,9 +68,72 @@ int GetTableTypes(void *used, int argc, char **argv, char **azcolname)
 {
     int* count = (int*)used;
     
+    printf("\n argv[0]: %s \nargv[1]: %s", argv[0], argv[1]);
+    printf("\n nCols = %d", settings.db_Cols);
     sscanf(argv[2], "%s", settings.db_ColTypes[count[0]]);
     printf("\ncol %d type: %s - argv2: %s", count[0], settings.db_ColTypes[*count], argv[2]);
     count[0]++;
+
+    return 0;
+}
+
+int GetQueryFromDB(void *not_used, int argc, char **argv, char **azcolname)
+{
+    not_used = 0;
+
+    if (argc > 0 && argc <= 64)
+    {
+        if (settings.db_Rows == 0)
+        {
+            settings.db_Cols = argc;
+            settings.db_ColNames = (char **)realloc(settings.db_ColNames, argc * sizeof(char *));
+            settings.db_ColTypes = (char **)realloc(settings.db_ColTypes, argc * sizeof(char *));
+
+            for (int i = 0; i < argc; i++)
+            {
+                settings.db_ColNames[i] = (char *)calloc(kStringSize, sizeof(char));
+
+                sscanf(azcolname[i], "%s", settings.db_ColNames[i]);
+
+                settings.db_ColTypes[i] = (char *)calloc(kStringSize, sizeof(char));
+            }
+        }
+
+        settings.db_Rows++;
+
+        // Row memory reserve
+        settings.db_table_info = (char ***)realloc(settings.db_table_info, settings.db_Rows * sizeof(char **));
+        settings.db_table_info_back = (char ***)realloc(settings.db_table_info_back, settings.db_Rows * sizeof(char **));
+
+        // Col memory reserve
+        settings.db_table_info[settings.db_Rows - 1] = (char **)calloc(argc, sizeof(char *));
+        settings.db_table_info_back[settings.db_Rows - 1] = (char **)calloc(argc, sizeof(char *));
+
+        // Strings memory reserve
+        for (int i = 0; i < argc; i++)
+        {
+            if (NULL != argv[i])
+            {
+                settings.db_table_info[settings.db_Rows - 1][i] = (char *)calloc(strlen(argv[i]) + kStringSize, sizeof(char));
+                sscanf(argv[i], "%[^\n]", settings.db_table_info[settings.db_Rows - 1][i]);
+
+                settings.db_table_info_back[settings.db_Rows - 1][i] = (char *)calloc(strlen(argv[i]) + kStringSize, sizeof(char));
+                sscanf(argv[i], "%[^\n]", settings.db_table_info_back[settings.db_Rows - 1][i]);
+            }
+            else
+            {
+                settings.db_table_info[settings.db_Rows - 1][i] = (char *)calloc(kStringSize, sizeof(char));
+                strcpy(settings.db_table_info[settings.db_Rows - 1][i], "\0");
+
+                settings.db_table_info_back[settings.db_Rows - 1][i] = (char *)calloc(kStringSize, sizeof(char));
+                strcpy(settings.db_table_info_back[settings.db_Rows - 1][i], "\0");
+            }
+        }
+    }
+    else
+    {
+        AddErrorMsg("Asertion failed: columns_count > 0 && coulumns_count <= 64 && Only 1..64 \"columns allowed!\"");
+    }
 
     return 0;
 }
@@ -306,7 +378,7 @@ void FreeTable(int cols, int rows, char*** table) {
                 if (settings.db_ColTypes[i] != nullptr)
                 {
                     free(settings.db_ColTypes[i]);
-                    settings.db_ColTypes[i];
+                    settings.db_ColTypes[i] = nullptr;
                 }
             }
         }
@@ -314,8 +386,8 @@ void FreeTable(int cols, int rows, char*** table) {
         free(settings.db_ColNames);
         settings.db_ColNames = nullptr;
 
-        free(settings.db_ColTypes);
-        settings.db_ColTypes = nullptr;
+        // free(settings.db_ColTypes);
+        // settings.db_ColTypes = nullptr;
         // free(table);
         // table = nullptr;
     }
