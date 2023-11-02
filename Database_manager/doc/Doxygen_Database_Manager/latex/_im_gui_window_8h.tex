@@ -1,0 +1,184 @@
+\hypertarget{_im_gui_window_8h}{}\doxysection{include/\+Im\+Gui\+Window.h File Reference}
+\label{_im_gui_window_8h}\index{include/ImGuiWindow.h@{include/ImGuiWindow.h}}
+
+
+Window header.  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}esat\textbackslash{}window.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}esat\textbackslash{}input.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}esat\textbackslash{}draw.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}esat\textbackslash{}time.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}esat\+\_\+extra\textbackslash{}imgui.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}config.\+h\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+Im\+Vec2 \mbox{\hyperlink{_im_gui_window_8h_a2fd71abb0a89ddcd0a59f5aac569ee44}{Vec2to\+Im\+Vec2}} (\mbox{\hyperlink{struct_vec2}{Vec2}} vector)
+\begin{DoxyCompactList}\small\item\em Convert a custom \mbox{\hyperlink{struct_vec2}{Vec2}} vector to an Im\+Vec2 vector. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{_im_gui_window_8h_ab7abd1896837251be411a934ef035625}{Console\+Message}} (int type, int i)
+\begin{DoxyCompactList}\small\item\em Display a console message with color based on message type. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{_im_gui_window_8h_a9a2f796f1d23bc81c22e0c0793ff95de}{Data\+Base\+Selected\+Window}} ()
+\begin{DoxyCompactList}\small\item\em Open a window for selecting a database. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{_im_gui_window_8h_a4eeeff18750ae4c561d2687cc40374c7}{Table\+Selected\+Window}} (int selected\+\_\+database)
+\begin{DoxyCompactList}\small\item\em Open a window for selecting a table within a database. This function creates a window using Im\+Gui for selecting a table within the currently connected database. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{_im_gui_window_8h_aca16848691a69411da9db6cf64039abd}{Current\+Table\+Window}} (int selected\+\_\+table, int database\+\_\+selected, char current\+\_\+table\+\_\+name\mbox{[}$\,$\mbox{]}, int n\+\_\+db\+\_\+rows, int n\+\_\+db\+\_\+cols)
+\begin{DoxyCompactList}\small\item\em Display the contents of a selected table within the currently connected database. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{_im_gui_window_8h_ab07c7aceb6e574a311cb368d1c07669d}{Console\+Window}} ()
+\begin{DoxyCompactList}\small\item\em Display a console window for viewing messages and clearing the message history. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{_im_gui_window_8h_a2fde18781a41ab4b552d4bc63031decd}{Settings\+Window}} ()
+\begin{DoxyCompactList}\small\item\em Display a settings window for viewing application information and performing tests. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{_im_gui_window_8h_abcae494522652e1f4a734ced9d9b206e}{Querie\+Window}} ()
+\begin{DoxyCompactList}\small\item\em Display a window for inputting and executing database queries. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{_im_gui_window_8h_a71e6cd815df3a00633980673e5c4dde2}{All\+Window}} ()
+\begin{DoxyCompactList}\small\item\em Display the main application window containing various sub-\/windows. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Window header. 
+
+\begin{DoxyAuthor}{Author}
+Carlos Mazcunan \href{mailto:mazcunyanbla@esat-alumni.com}{\texttt{ mazcunyanbla@esat-\/alumni.\+com}} 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2023-\/1000-\/18
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Copyright (c) 2023 
+\end{DoxyCopyright}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{_im_gui_window_8h_a71e6cd815df3a00633980673e5c4dde2}\label{_im_gui_window_8h_a71e6cd815df3a00633980673e5c4dde2}} 
+\index{ImGuiWindow.h@{ImGuiWindow.h}!AllWindow@{AllWindow}}
+\index{AllWindow@{AllWindow}!ImGuiWindow.h@{ImGuiWindow.h}}
+\doxysubsubsection{\texorpdfstring{AllWindow()}{AllWindow()}}
+{\footnotesize\ttfamily void All\+Window (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Display the main application window containing various sub-\/windows. 
+
+This function serves as the main application window that displays several sub-\/windows for different tasks. It includes windows for selecting a database, selecting a table, viewing table data, a console for messages, and executing database queries. The content of each sub-\/window is dependent on the current application state. \mbox{\Hypertarget{_im_gui_window_8h_ab7abd1896837251be411a934ef035625}\label{_im_gui_window_8h_ab7abd1896837251be411a934ef035625}} 
+\index{ImGuiWindow.h@{ImGuiWindow.h}!ConsoleMessage@{ConsoleMessage}}
+\index{ConsoleMessage@{ConsoleMessage}!ImGuiWindow.h@{ImGuiWindow.h}}
+\doxysubsubsection{\texorpdfstring{ConsoleMessage()}{ConsoleMessage()}}
+{\footnotesize\ttfamily void Console\+Message (\begin{DoxyParamCaption}\item[{int}]{type,  }\item[{int}]{i }\end{DoxyParamCaption})}
+
+
+
+Display a console message with color based on message type. 
+
+This function displays a console message with a specified color based on the message type. It is used to show error messages in red and regular console messages in white using Im\+Gui\textquotesingle{}s text display functions.
+
+
+\begin{DoxyParams}{Parameters}
+{\em type} & The type of the console message (0 for error, 1 for regular message). \\
+\hline
+{\em i} & The index of the message in the {\ttfamily settings.\+console\+\_\+msg} array. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{_im_gui_window_8h_ab07c7aceb6e574a311cb368d1c07669d}\label{_im_gui_window_8h_ab07c7aceb6e574a311cb368d1c07669d}} 
+\index{ImGuiWindow.h@{ImGuiWindow.h}!ConsoleWindow@{ConsoleWindow}}
+\index{ConsoleWindow@{ConsoleWindow}!ImGuiWindow.h@{ImGuiWindow.h}}
+\doxysubsubsection{\texorpdfstring{ConsoleWindow()}{ConsoleWindow()}}
+{\footnotesize\ttfamily void Console\+Window (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Display a console window for viewing messages and clearing the message history. 
+
+This function creates a console window using Im\+Gui for viewing messages and provides a button to clear the message history. Messages are displayed with their respective colors based on their types. \mbox{\Hypertarget{_im_gui_window_8h_aca16848691a69411da9db6cf64039abd}\label{_im_gui_window_8h_aca16848691a69411da9db6cf64039abd}} 
+\index{ImGuiWindow.h@{ImGuiWindow.h}!CurrentTableWindow@{CurrentTableWindow}}
+\index{CurrentTableWindow@{CurrentTableWindow}!ImGuiWindow.h@{ImGuiWindow.h}}
+\doxysubsubsection{\texorpdfstring{CurrentTableWindow()}{CurrentTableWindow()}}
+{\footnotesize\ttfamily void Current\+Table\+Window (\begin{DoxyParamCaption}\item[{int}]{selected\+\_\+table,  }\item[{int}]{database\+\_\+selected,  }\item[{char}]{current\+\_\+table\+\_\+name\mbox{[}$\,$\mbox{]},  }\item[{int}]{n\+\_\+db\+\_\+rows,  }\item[{int}]{n\+\_\+db\+\_\+cols }\end{DoxyParamCaption})}
+
+
+
+Display the contents of a selected table within the currently connected database. 
+
+This function creates a window using Im\+Gui to display the contents of a selected table within the currently connected database. It uses an Im\+Gui table to present the data in rows and columns.
+
+
+\begin{DoxyParams}{Parameters}
+{\em selected\+\_\+table} & The index of the currently selected table. \\
+\hline
+{\em database\+\_\+selected} & The index of the currently selected database. \\
+\hline
+{\em current\+\_\+table\+\_\+name} & The name of the currently selected table. \\
+\hline
+{\em n\+\_\+db\+\_\+rows} & The number of rows in the table (default is 0). \\
+\hline
+{\em n\+\_\+db\+\_\+cols} & The number of columns in the table (default is 0). \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{_im_gui_window_8h_a9a2f796f1d23bc81c22e0c0793ff95de}\label{_im_gui_window_8h_a9a2f796f1d23bc81c22e0c0793ff95de}} 
+\index{ImGuiWindow.h@{ImGuiWindow.h}!DataBaseSelectedWindow@{DataBaseSelectedWindow}}
+\index{DataBaseSelectedWindow@{DataBaseSelectedWindow}!ImGuiWindow.h@{ImGuiWindow.h}}
+\doxysubsubsection{\texorpdfstring{DataBaseSelectedWindow()}{DataBaseSelectedWindow()}}
+{\footnotesize\ttfamily void Data\+Base\+Selected\+Window (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Open a window for selecting a database. 
+
+This function creates a window using Im\+Gui for selecting a database. It provides options to connect to or disconnect from a database. \mbox{\Hypertarget{_im_gui_window_8h_abcae494522652e1f4a734ced9d9b206e}\label{_im_gui_window_8h_abcae494522652e1f4a734ced9d9b206e}} 
+\index{ImGuiWindow.h@{ImGuiWindow.h}!QuerieWindow@{QuerieWindow}}
+\index{QuerieWindow@{QuerieWindow}!ImGuiWindow.h@{ImGuiWindow.h}}
+\doxysubsubsection{\texorpdfstring{QuerieWindow()}{QuerieWindow()}}
+{\footnotesize\ttfamily void Querie\+Window (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Display a window for inputting and executing database queries. 
+
+This function creates a window using Im\+Gui for inputting database queries and provides options to submit the query and clear the input field. It also handles the execution of queries and updates the user interface accordingly. \mbox{\Hypertarget{_im_gui_window_8h_a2fde18781a41ab4b552d4bc63031decd}\label{_im_gui_window_8h_a2fde18781a41ab4b552d4bc63031decd}} 
+\index{ImGuiWindow.h@{ImGuiWindow.h}!SettingsWindow@{SettingsWindow}}
+\index{SettingsWindow@{SettingsWindow}!ImGuiWindow.h@{ImGuiWindow.h}}
+\doxysubsubsection{\texorpdfstring{SettingsWindow()}{SettingsWindow()}}
+{\footnotesize\ttfamily void Settings\+Window (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Display a settings window for viewing application information and performing tests. 
+
+This function creates a settings window using Im\+Gui for displaying various application information, including resolution, frame rate, database counts, and the application version. It also provides buttons for performing tests and viewing application credits. Additionally, it displays the current connection status. \mbox{\Hypertarget{_im_gui_window_8h_a4eeeff18750ae4c561d2687cc40374c7}\label{_im_gui_window_8h_a4eeeff18750ae4c561d2687cc40374c7}} 
+\index{ImGuiWindow.h@{ImGuiWindow.h}!TableSelectedWindow@{TableSelectedWindow}}
+\index{TableSelectedWindow@{TableSelectedWindow}!ImGuiWindow.h@{ImGuiWindow.h}}
+\doxysubsubsection{\texorpdfstring{TableSelectedWindow()}{TableSelectedWindow()}}
+{\footnotesize\ttfamily void Table\+Selected\+Window (\begin{DoxyParamCaption}\item[{int}]{selected\+\_\+database }\end{DoxyParamCaption})}
+
+
+
+Open a window for selecting a table within a database. This function creates a window using Im\+Gui for selecting a table within the currently connected database. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em selected\+\_\+database} & The index of the currently selected database. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{_im_gui_window_8h_a2fd71abb0a89ddcd0a59f5aac569ee44}\label{_im_gui_window_8h_a2fd71abb0a89ddcd0a59f5aac569ee44}} 
+\index{ImGuiWindow.h@{ImGuiWindow.h}!Vec2toImVec2@{Vec2toImVec2}}
+\index{Vec2toImVec2@{Vec2toImVec2}!ImGuiWindow.h@{ImGuiWindow.h}}
+\doxysubsubsection{\texorpdfstring{Vec2toImVec2()}{Vec2toImVec2()}}
+{\footnotesize\ttfamily Im\+Vec2 Vec2to\+Im\+Vec2 (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_vec2}{Vec2}}}]{vector }\end{DoxyParamCaption})}
+
+
+
+Convert a custom \mbox{\hyperlink{struct_vec2}{Vec2}} vector to an Im\+Vec2 vector. 
+
+This function takes a custom \mbox{\hyperlink{struct_vec2}{Vec2}} vector and converts it to an Im\+Vec2 vector, which is suitable for use with Im\+Gui functions.
+
+
+\begin{DoxyParams}{Parameters}
+{\em vector} & The custom \mbox{\hyperlink{struct_vec2}{Vec2}} vector to be converted. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An Im\+Vec2 vector equivalent to the input custom \mbox{\hyperlink{struct_vec2}{Vec2}} vector. 
+\end{DoxyReturn}
